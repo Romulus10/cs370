@@ -4,3 +4,4 @@
 
 int *cross_product(int *a, int *b);
 int dot_product(int *a, int *b);
+int *multiply(int **a, int *b);
