@@ -1,4 +1,9 @@
 /*
+ * Sean Batzel
+ * Test whether the environment is correctly configured.
+ */
+
+/*
  *  simple.c
  *  This program draws a white rectangle on a black background.
  */
