@@ -1,6 +1,6 @@
 /*
  * Sean Batzel
- * Test whether the environment is correctly configured.
+ * Test whether the environment is correctly configured using Dr. Bishop's example code.
  */
 
 /*
