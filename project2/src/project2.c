@@ -1,30 +1,43 @@
 #include <GL/glut.h>
+#include <math.h>
 
-transform_eye() {
+void transform_eye() {
+    int *y_rot = {
+        {},
+        {},
+        {},
+        {}
+    };
 
 }
 
-draw_triangles() {
+void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_TRIANGLES);
-        
+        glVertex3f(0.5,0.5,0.5);
+        glVertex3f(0.0,0.0,0.0);
+        glVertex3f(-0.5,-0.5,-0.5);
+        glVertex3f(-0.5,0.5,-0.5);
+        glVertex3f(-0.5,-0.5,0.5);
+        glVertex3f(0.5,0.0,0.0);
     glEnd();
     glFlush();
 }
 
-init_mod() {
+void init_mod() {
 
 }
 
 void display(void) {
-	transform_eye();
+
+    transform_eye();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective( 40.0, 1.0, 1.0, 10000.0 );
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt( eyex, eyey, eyez,
+	gluLookAt( 5.0, 5.0, 5.0,
 	           0.0, 0.0, 0.0,
 	           0.0, 1.0, 0.0
                );
@@ -36,7 +49,8 @@ void display(void) {
 }
 
 int main(int argc, char** argv) {
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+	glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow("simple");
 	glutDisplayFunc(display);
 	glutIdleFunc(glutPostRedisplay);
