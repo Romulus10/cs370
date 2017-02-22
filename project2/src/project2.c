@@ -5,14 +5,18 @@ transform_eye() {
 }
 
 draw_triangles() {
-
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBegin(GL_TRIANGLES);
+        
+    glEnd();
+    glFlush();
 }
 
 init_mod() {
 
 }
 
-void display(void) {}
+void display(void) {
 	transform_eye();
 
 	glMatrixMode(GL_PROJECTION);
