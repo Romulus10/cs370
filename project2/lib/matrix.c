@@ -1,17 +1,8 @@
-float *multiply(float *x, float *y) {
-    int i, j;
-    float z[4];
-    for (i = 0; i < 4; i++) {
-        for (j = 0; j < 4; j++) {
-            x[i][j] = z[j];
-        }
-    }
-    return z;
-}
+#include <stdlib.h>
 
-int *multiply(int *x, int *y) {
+double *multiply(double **x, double *y) {
     int i, j;
-    int z[4];
+    static double z[4] = {0, 0, 0, 0};
     for (i = 0; i < 4; i++) {
         for (j = 0; j < 4; j++) {
             x[i][j] = z[j];

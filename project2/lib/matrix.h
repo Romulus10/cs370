@@ -1,2 +1,1 @@
-float *multiply(float *x, float *y);
-int *multiply(int *x, int *y);
+double *multiply(double *x, double *y);

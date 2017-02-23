@@ -1,14 +1,17 @@
 #include <GL/glut.h>
 #include <math.h>
+#include "../lib/matrix.h"
 
-void transform_eye() {
-    int *y_rot = {
-        {},
-        {},
-        {},
-        {}
+double *eye;
+
+double *transform_eye(double *eye) {
+    double y_rot[4][4] = {
+        {cos(1.0), 0.0, sin(1.0), 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {-sin(1.0), 0.0, cos(1.0), 0.0},
+        {0.0, 0.0, 0.0, 1.0}
     };
-
+    return multiply(*y_rot, eye);
 }
 
 void draw_triangles() {
@@ -30,7 +33,7 @@ void init_mod() {
 
 void display(void) {
 
-    transform_eye();
+    eye = transform_eye(eye);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -49,6 +52,13 @@ void display(void) {
 }
 
 int main(int argc, char** argv) {
+
+    eye = malloc(sizeof(double) * 3);
+
+    eye[0] = 5.0;
+    eye[1] = 5.0;
+    eye[2] = 5.0;
+
 	glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutCreateWindow("simple");
