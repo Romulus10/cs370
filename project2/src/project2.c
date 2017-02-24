@@ -6,22 +6,22 @@ double *eye;
 double *transform_eye() {
     // Simplified algorithm for a full y-transform
     // https://open.gl/transformations
-    eye[0] = ((cos(1) * eye[0]) + (sin(1) * eye[2]));
+    eye[0] = ((cos(1 * (M_PI/180)) * eye[0]) + (sin(1 * (M_PI/180)) * eye[2]));
     eye[1] = eye[1];
-    eye[2] = ((-sin(1) * eye[0]) + (cos(1) * eye[2]));
+    eye[2] = ((-sin(1 * (M_PI/180)) * eye[0]) + (cos(1 * (M_PI/180)) * eye[2]));
     eye[3] = 1;
 }
 
 void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glBegin(GL_TRIANGLE_STRIP);
-	    glVertex3f(-0.5, -0.5, -0.5);
+    glBegin(GL_TRIANGLES);
 	    glVertex3f(-0.5, -0.5, 0.5);
-	    glVertex3f(0.5, -0.5, -0.5);
-	    glVertex3f(-0.5, -0.5, -0.5);
-	    glVertex3f(-0.5, -0.5, -0.5);
-	    glVertex3f(-0.5, -0.5, -0.5);
+	    glVertex3f(0.5, -0.5, 0.5);
 	    glVertex3f(-0.5, 0.5, 0.5);
+	    glVertex3f(-0.5, 0.5, 0.5);
+	    glVertex3f(-0.5, -0.5, -0.5);
+	    glVertex3f(0.5, -0.5, -0.5);
+	    glVertex3f(0.5, 0.5, -0.5);
 	    glVertex3f(-0.5, 0.5, -0.5);
     glEnd();
     glFlush();
