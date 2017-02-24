@@ -7,7 +7,7 @@ CC=gcc
 
 make:
 	mkdir build
-	$(CC) src/project2.c lib/matrix.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/project2
+	$(CC) src/project2.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/project2
 
 clean:
 	rm -rf build

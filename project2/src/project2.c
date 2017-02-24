@@ -1,17 +1,15 @@
 #include <GL/glut.h>
 #include <math.h>
-#include "../lib/matrix.h"
 
 double *eye;
 
 double *transform_eye() {
-    double y_rot[4][4] = {
-        {cos(1.0), 0.0, sin(1.0), 0.0},
-        {0.0, 1.0, 0.0, 0.0},
-        {-sin(1.0), 0.0, cos(1.0), 0.0},
-        {0.0, 0.0, 0.0, 1.0}
-    };
-    return multiply(*y_rot, eye);
+    // Simplified algorithm for a full y-transform
+    // https://open.gl/transformations
+    eye[0] = ((cos(1) * eye[0]) + (sin(1) * eye[2]));
+    eye[1] = eye[1];
+    eye[2] = ((-sin(1) * eye[0]) + (cos(1) * eye[2]));
+    eye[3] = 1;
 }
 
 void draw_triangles() {
@@ -44,7 +42,7 @@ void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	draw_triangles();
 
-	// transform_eye();
+    transform_eye();
 
 	glutSwapBuffers();
 }
