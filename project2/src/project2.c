@@ -4,7 +4,7 @@
 
 double *eye;
 
-double *transform_eye(double *eye) {
+double *transform_eye() {
     double y_rot[4][4] = {
         {cos(1.0), 0.0, sin(1.0), 0.0},
         {0.0, 1.0, 0.0, 0.0},
@@ -17,18 +17,19 @@ double *transform_eye(double *eye) {
 void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_TRIANGLE_STRIP);
-        glVertex3f(-0.5,-0.5,-0.5);
-        glVertex3f(-0.5,-0.5,0.5);
-        glVertex3f(0.5,-0.5,-0.5);
-        glVertex3f(-0.5,0.5,-0.5);
-        glVertex3f(0.5,0.5,-0.5);
+	    glVertex3f(-0.5, -0.5, -0.5);
+	    glVertex3f(-0.5, -0.5, 0.5);
+	    glVertex3f(0.5, -0.5, -0.5);
+	    glVertex3f(-0.5, -0.5, -0.5);
+	    glVertex3f(-0.5, -0.5, -0.5);
+	    glVertex3f(-0.5, -0.5, -0.5);
+	    glVertex3f(-0.5, 0.5, 0.5);
+	    glVertex3f(-0.5, 0.5, -0.5);
     glEnd();
     glFlush();
 }
 
 void display(void) {
-
-    eye = transform_eye(eye);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -42,6 +43,8 @@ void display(void) {
 
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	draw_triangles();
+
+	// transform_eye();
 
 	glutSwapBuffers();
 }
