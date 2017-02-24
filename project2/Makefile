@@ -11,3 +11,4 @@ make:
 
 clean:
 	rm -rf build
+	rm -rf vgcore.*

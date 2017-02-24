@@ -16,19 +16,14 @@ double *transform_eye(double *eye) {
 
 void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glBegin(GL_TRIANGLES);
-        glVertex3f(0.5,0.5,0.5);
-        glVertex3f(0.0,0.0,0.0);
+    glBegin(GL_TRIANGLE_STRIP);
         glVertex3f(-0.5,-0.5,-0.5);
-        glVertex3f(-0.5,0.5,-0.5);
         glVertex3f(-0.5,-0.5,0.5);
-        glVertex3f(0.5,0.0,0.0);
+        glVertex3f(0.5,-0.5,-0.5);
+        glVertex3f(-0.5,0.5,-0.5);
+        glVertex3f(0.5,0.5,-0.5);
     glEnd();
     glFlush();
-}
-
-void init_mod() {
-
 }
 
 void display(void) {
@@ -40,7 +35,7 @@ void display(void) {
 	gluPerspective( 40.0, 1.0, 1.0, 10000.0 );
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt( 5.0, 5.0, 5.0,
+	gluLookAt( eye[0], eye[1], eye[2],
 	           0.0, 0.0, 0.0,
 	           0.0, 1.0, 0.0
                );
@@ -53,11 +48,12 @@ void display(void) {
 
 int main(int argc, char** argv) {
 
-    eye = malloc(sizeof(double) * 3);
+    eye = malloc(sizeof(double) * 4);
 
     eye[0] = 5.0;
     eye[1] = 5.0;
     eye[2] = 5.0;
+    eye[3] = 1.0;
 
 	glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -65,6 +61,5 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutIdleFunc(glutPostRedisplay);
 	glEnable(GL_DEPTH_TEST);
-	init_mod();
 	glutMainLoop();
 }
