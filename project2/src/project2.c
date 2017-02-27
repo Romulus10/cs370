@@ -5,6 +5,7 @@ double *eye;
 
 double *transform_eye() {
     // Simplified algorithm for a full y-transform
+    // Adapted from:
     // https://open.gl/transformations
     eye[0] = ((cos(1 * (M_PI/180)) * eye[0]) + (sin(1 * (M_PI/180)) * eye[2]));
     eye[1] = eye[1];
