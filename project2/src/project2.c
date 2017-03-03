@@ -3,6 +3,18 @@
 
 double *eye;
 
+typedef struct {
+    double x;
+    double y;
+    double z;
+} vertex;
+
+typedef struct {
+    vertex a;
+    vertex b;
+    vertex c;
+} triangle;
+
 double *transform_eye() {
     // Simplified algorithm for a full y-transform
     // Adapted from:
@@ -15,49 +27,57 @@ double *transform_eye() {
 
 void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glBegin(GL_TRIANGLES); 
+    glBegin(GL_TRIANGLES);
     // Front
-    glVertex3f(-0.5, 0.5, 0.5);
-    glVertex3f(-0.5, -0.5, 0.5);
-    glVertex3f(0.5, 0.5, 0.5);
-    glVertex3f(0.5, 0.5, 0.5);
-    glVertex3f(-0.5, -0.5, 0.5);
-    glVertex3f(0.5, -0.5, 0.5);
+    (-0.5, 0.5, 0.5);
+    (-0.5, -0.5, 0.5);
+    (0.5, 0.5, 0.5);
+    (0.5, 0.5, 0.5);
+    (-0.5, -0.5, 0.5);
+    (0.5, -0.5, 0.5);
     // Right
-    glVertex3f(0.5, 0.5, 0.5);
-    glVertex3f(0.5, -0.5, 0.5);
-    glVertex3f(0.5, 0.5, -0.5);
-    glVertex3f(0.5, 0.5, -0.5);
-    glVertex3f(0.5, -0.5, 0.5);
-    glVertex3f(0.5, -0.5, -0.5);
+    (0.5, 0.5, 0.5);
+    (0.5, -0.5, 0.5);
+    (0.5, 0.5, -0.5);
+    (0.5, 0.5, -0.5);
+    (0.5, -0.5, 0.5);
+    (0.5, -0.5, -0.5);
     // Back
-    glVertex3f(0.5, 0.5, -0.5);
-    glVertex3f(0.5, -0.5, -0.5);
-    glVertex3f(-0.5, 0.5, -0.5);
-    glVertex3f(-0.5, 0.5, -0.5);
-    glVertex3f(0.5, -0.5, -0.5);
-    glVertex3f(-0.5, -0.5, -0.5);
+    (0.5, 0.5, -0.5);
+    (0.5, -0.5, -0.5);
+    (-0.5, 0.5, -0.5);
+    (-0.5, 0.5, -0.5);
+    (0.5, -0.5, -0.5);
+    (-0.5, -0.5, -0.5);
     // Left
-    glVertex3f(-0.5, 0.5, -0.5);
-    glVertex3f(-0.5, -0.5, -0.5);
-    glVertex3f(-0.5, 0.5, 0.5);
-    glVertex3f(-0.5, 0.5, 0.5);
-    glVertex3f(-0.5, -0.5, -0.5);
-    glVertex3f(-0.5, -0.5, 0.5);
+    (-0.5, 0.5, -0.5);
+    (-0.5, -0.5, -0.5);
+    (-0.5, 0.5, 0.5);
+    (-0.5, 0.5, 0.5);
+    (-0.5, -0.5, -0.5);
+    (-0.5, -0.5, 0.5);
     // Top
-    glVertex3f(-0.5, 0.5, -0.5);
-    glVertex3f(-0.5, 0.5, 0.5);
-    glVertex3f(0.5, 0.5, -0.5);
-    glVertex3f(0.5, 0.5, -0.5);
-    glVertex3f(-0.5, 0.5, 0.5);
-    glVertex3f(0.5, 0.5, 0.5);
+    (-0.5, 0.5, -0.5);
+    (-0.5, 0.5, 0.5);
+    (0.5, 0.5, -0.5);
+    (0.5, 0.5, -0.5);
+    (-0.5, 0.5, 0.5);
+    (0.5, 0.5, 0.5);
     // Bottom
-    glVertex3f(-0.5, -0.5, 0.5);
-    glVertex3f(-0.5, -0.5, -0.5);
-    glVertex3f(0.5, -0.5, 0.5);
-    glVertex3f(0.5, -0.5, 0.5);
-    glVertex3f(-0.5, -0.5, -0.5);
-    glVertex3f(0.5, -0.5, -0.5) ;
+    (-0.5, -0.5, 0.5);
+    (-0.5, -0.5, -0.5);
+    (0.5, -0.5, 0.5);
+    (0.5, -0.5, 0.5);
+    (-0.5, -0.5, -0.5);
+    (0.5, -0.5, -0.5);
+
+    int i;
+    for (i = 0; i < 12; i = i + 3) {
+        glVertex3f(triangles[i]->a->x, triangles[i+1]->a->y, triangles[i+2]->a->z);
+        glVertex3f(triangles[i]->b->x, triangles[i+1]->b->y, triangles[i+2]->b->z);
+        glVertex3f(triangles[i]->c->x, triangles[i+1]->c->y, triangles[i+2]->c->z);
+    }
+
     glEnd();
     glFlush();
 }
