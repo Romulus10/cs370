@@ -57,7 +57,7 @@ void draw_triangles() {
     };
 
     int i;
-    for (i = 0; i < 42; i = i + 3) {
+    for (i = 0; i < 108; i = i + 3) {
         glVertex3f(triangles[i], triangles[i+1], triangles[i+2]);
     }
 
