@@ -18,10 +18,10 @@ void draw_triangles() {
     glBegin(GL_TRIANGLES);
 
     static const double colors[3][3] = {
-        {1,0,0},
-        {0,1,0},
-        {0,0,1}
-    }
+        {1.0,0.0,0.0},
+        {0.0,1.0,0.0},
+        {0.0,0.0,1.0}
+    };
 
     static const double triangles[36][3] = {
         {-0.5,-0.5,-0.5},
@@ -63,9 +63,17 @@ void draw_triangles() {
     };
 
     int i;
-    int j;
+    int j = 0;
+    int k = 0;
+
     for (i = 0; i < 36; i++) {
+        if (j == 6) {
+            j = 0;
+            k++;
+        }
+        glColor3f(colors[k][0], colors[k][1], colors[k][2]);
         glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
+        j++;
     }
 
     glEnd();
