@@ -5,20 +5,20 @@
  * Rotating Cube
  */
 
-
+#include <stdio.h>
 #include <GL/glut.h>
 #include <math.h>
 
-double *eye;
+float *eye;
 
-double *transform_eye() {
+float *transform_eye() {
     // Simplified algorithm for a full y-transform
     // This takes the full matrix multiplication and
     // reduces it down to a manageable number of steps.
     // ISSUE:
     //  math.h trig functions deal in radians.
     //  degrees = radians * (π / 180)
-    //  doubles lose some precision,
+    //  floats lose some precision,
     //  leading to the observer straying from
     //  a perfect rotation.
     // Adapted from:
@@ -34,50 +34,50 @@ void draw_triangles() {
     glBegin(GL_TRIANGLES);
 
     /*
-    static const double colors[3][3] = {
-        {1.0,0.0,0.0},
-        {0.0,1.0,0.0},
-        {0.0,0.0,1.0}
+    static const float colors[3][3] = {
+        {1.0f,0.0f,0.0f},
+        {0.0f,1.0f,0.0f},
+        {0.0f,0.0f,1.0f}
     };
     */
 
-    static const double triangles[36][3] = {
-        {-0.5,-0.5,-0.5},
-        {-0.5,-0.5, 0.5},
-        {-0.5, 0.5, 0.5},
-        {0.5, 0.5,-0.5},
-        {-0.5,-0.5,-0.5},
-        {-0.5, 0.5,-0.5},
-        {0.5,-0.5, 0.5},
-        {-0.5,-0.5,-0.5},
-        {0.5,-0.5,-0.5},
-        {0.5, 0.5,-0.5},
-        {0.5,-0.5,-0.5},
-        {-0.5,-0.5,-0.5},
-        {-0.5,-0.5,-0.5},
-        {-0.5, 0.5, 0.5},
-        {-0.5, 0.5,-0.5},
-        {0.5,-0.5, 0.5},
-        {-0.5,-0.5, 0.5},
-        {-0.5,-0.5,-0.5},
-        {-0.5, 0.5, 0.5},
-        {-0.5,-0.5, 0.5},
-        {0.5,-0.5, 0.5},
-        {0.5, 0.5, 0.5},
-        {0.5,-0.5,-0.5},
-        {0.5, 0.5,-0.5},
-        {0.5,-0.5,-0.5},
-        {0.5, 0.5, 0.5},
-        {0.5,-0.5, 0.5},
-        {0.5, 0.5, 0.5},
-        {0.5, 0.5,-0.5},
-        {-0.5, 0.5,-0.5},
-        {0.5, 0.5, 0.5},
-        {-0.5, 0.5,-0.5},
-        {-0.5, 0.5, 0.5},
-        {0.5, 0.5, 0.5},
-        {-0.5, 0.5, 0.5},
-        {0.5,-0.5, 0.5}
+    static const float triangles[36][3] = {
+        {-0.5f,-0.5f,-0.5f},
+        {-0.5f,-0.5f, 0.5f},
+        {-0.5f, 0.5f, 0.5f},
+        {0.5f, 0.5f,-0.5f},
+        {-0.5f,-0.5f,-0.5f},
+        {-0.5f, 0.5f,-0.5f},
+        {0.5f,-0.5f, 0.5f},
+        {-0.5f,-0.5f,-0.5f},
+        {0.5f,-0.5f,-0.5f},
+        {0.5f, 0.5f,-0.5f},
+        {0.5f,-0.5f,-0.5f},
+        {-0.5f,-0.5f,-0.5f},
+        {-0.5f,-0.5f,-0.5f},
+        {-0.5f, 0.5f, 0.5f},
+        {-0.5f, 0.5f,-0.5f},
+        {0.5f,-0.5f, 0.5f},
+        {-0.5f,-0.5f, 0.5f},
+        {-0.5f,-0.5f,-0.5f},
+        {-0.5f, 0.5f, 0.5f},
+        {-0.5f,-0.5f, 0.5f},
+        {0.5f,-0.5f, 0.5f},
+        {0.5f, 0.5f, 0.5f},
+        {0.5f,-0.5f,-0.5f},
+        {0.5f, 0.5f,-0.5f},
+        {0.5f,-0.5f,-0.5f},
+        {0.5f, 0.5f, 0.5f},
+        {0.5f,-0.5f, 0.5f},
+        {0.5f, 0.5f, 0.5f},
+        {0.5f, 0.5f,-0.5f},
+        {-0.5f, 0.5f,-0.5f},
+        {0.5f, 0.5f, 0.5f},
+        {-0.5f, 0.5f,-0.5f},
+        {-0.5f, 0.5f, 0.5f},
+        {0.5f, 0.5f, 0.5f},
+        {-0.5f, 0.5f, 0.5f},
+        {0.5f,-0.5f, 0.5f}
     };
 
     int i;
@@ -103,12 +103,13 @@ void display(void) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective( 40.0, 1.0, 1.0, 10000.0 );
+    gluPerspective( 40.0f, 1.0f, 1.0f, 10000.0f );
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    //printf("%f %f %f\n", eye[0], eye[1], eye[2]);
     gluLookAt( eye[0], eye[1], eye[2],
-            0.0, 0.0, 0.0,
-            0.0, 1.0, 0.0
+            0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f, 0.0f
             );
 
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -121,12 +122,12 @@ void display(void) {
 
 int main(int argc, char** argv) {
 
-    eye = malloc(sizeof(double) * 4);
+    eye = malloc(sizeof(float) * 4);
 
-    eye[0] = 5.0;
-    eye[1] = 5.0;
-    eye[2] = 5.0;
-    eye[3] = 1.0;
+    eye[0] = 5.0f;
+    eye[1] = 5.0f;
+    eye[2] = 5.0f;
+    eye[3] = 1.0f;
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
