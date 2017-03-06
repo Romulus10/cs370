@@ -17,6 +17,12 @@ void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_TRIANGLES);
 
+    static const double colors[3][3] = {
+        {1,0,0},
+        {0,1,0},
+        {0,0,1}
+    }
+
     static const double triangles[36][3] = {
         {-0.5,-0.5,-0.5},
         {-0.5,-0.5, 0.5},
