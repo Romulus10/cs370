@@ -1,3 +1,11 @@
+/*
+ * Sean Batzel
+ *
+ * CMPS 370
+ * Rotating Cube
+ */
+
+
 #include <GL/glut.h>
 #include <math.h>
 
@@ -5,6 +13,14 @@ double *eye;
 
 double *transform_eye() {
     // Simplified algorithm for a full y-transform
+    // This takes the full matrix multiplication and
+    // reduces it down to a manageable number of steps.
+    // ISSUE:
+    //  math.h trig functions deal in radians.
+    //  degrees = radians * (π / 180)
+    //  doubles lose some precision,
+    //  leading to the observer straying from
+    //  a perfect rotation.
     // Adapted from:
     // https://open.gl/transformations
     eye[0] = ((cos(1 * (M_PI/180)) * eye[0]) + (sin(1 * (M_PI/180)) * eye[2]));
@@ -17,11 +33,13 @@ void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_TRIANGLES);
 
+    /*
     static const double colors[3][3] = {
         {1.0,0.0,0.0},
         {0.0,1.0,0.0},
         {0.0,0.0,1.0}
     };
+    */
 
     static const double triangles[36][3] = {
         {-0.5,-0.5,-0.5},
@@ -63,17 +81,18 @@ void draw_triangles() {
     };
 
     int i;
-    int j = 0;
-    int k = 0;
+    //int j = 0;
+    //int k = 0;
 
     for (i = 0; i < 36; i++) {
-        if (j == 6) {
-            j = 0;
-            k++;
-        }
-        glColor3f(colors[k][0], colors[k][1], colors[k][2]);
+        // Color logic removed.
+        //if (j == 6) {
+        //    j = 0;
+        //    k++;
+        //}
+        //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
         glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
-        j++;
+        //j++;
     }
 
     glEnd();
