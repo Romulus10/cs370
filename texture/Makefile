@@ -8,11 +8,11 @@ CC=gcc
 
 make:
 	mkdir build
-	$(CC) src/project2.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/project2
+	$(CC) src/texture.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
 
 no_opt:
 	mkdir build
-	$(CC) src/project2.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/project2
+	$(CC) src/texture.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
 
 clean:
 	rm -rf build
