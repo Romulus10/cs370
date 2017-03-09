@@ -9,6 +9,8 @@
 #include <GL/glut.h>
 #include <math.h>
 
+#include "../assets/pip_boy.h"
+
 float *eye;
 
 float *transform_eye() {
@@ -137,6 +139,7 @@ int main(int argc, char** argv) {
     glutDisplayFunc(display);
     glutIdleFunc(glutPostRedisplay);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
     glutMainLoop();
     free(eye);
 }
