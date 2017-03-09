@@ -33,6 +33,7 @@ void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_TRIANGLES);
 
+    /*
     static const float colors[6][3] = {
         {1.0f,0.0f,0.0f},
         {0.0f,1.0f,0.0f},
@@ -41,6 +42,7 @@ void draw_triangles() {
         {0.0f,1.0f,0.0f},
         {0.0f,0.0f,1.0f}
     };
+    */
 
     static const float triangles[36][3] = {
         {-0.5f,-0.5f,-0.5f},
@@ -90,7 +92,7 @@ void draw_triangles() {
             j = 0;
             k++;
         }
-        glColor3f(colors[k][0], colors[k][1], colors[k][2]);
+        //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
         glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
         j++;
     }
