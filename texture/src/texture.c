@@ -124,16 +124,18 @@ void display(void) {
     glutSwapBuffers();
 }
 
-int main(int argc, char** argv) {
-
+void init() {
     eye = malloc(sizeof(float) * 4);
-
     eye[0] = 5.0f;
     eye[1] = 5.0f;
     eye[2] = 5.0f;
     eye[3] = 1.0f;
 
+}
+
+int main(int argc, char** argv) {
     glutInit(&argc, argv);
+    init();
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutCreateWindow("simple");
     glutDisplayFunc(display);
