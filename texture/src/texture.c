@@ -130,7 +130,9 @@ void init() {
     eye[1] = 5.0f;
     eye[2] = 5.0f;
     eye[3] = 1.0f;
-
+    GLUuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
 }
 
 int main(int argc, char** argv) {
