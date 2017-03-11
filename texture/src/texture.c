@@ -2,7 +2,7 @@
  * Sean Batzel
  *
  * CMPS 370
- * Rotating Cube
+ * Rotating Cube - with texture
  */
 
 #include <stdio.h>
@@ -89,13 +89,20 @@ void draw_triangles() {
     int j = 0;
     int k = 0;
 
-    for (i = 0; i < 36; i++) {
+    for (i = 0; i < 36; i = i + 6) {
         if (j == 6) {
             j = 0;
             k++;
         }
         //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
+        glTexCoord2f(0.0f, 0.0f);
         glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
+        glVertex3f(triangles[i+1][0], triangles[i+1][1], triangles[i+1][2]);
+        glVertex3f(triangles[i+2][0], triangles[i+2][1], triangles[i+2][2]);
+        glVertex3f(triangles[i+3][0], triangles[i+3][1], triangles[i+3][2]);
+        glVertex3f(triangles[i+4][0], triangles[i+4][1], triangles[i+4][2]);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(triangles[i+5][0], triangles[i+5][1], triangles[i+5][2]);
         j++;
     }
 
@@ -130,9 +137,12 @@ void init() {
     eye[1] = 5.0f;
     eye[2] = 5.0f;
     eye[3] = 1.0f;
-    GLUuint tex;
-    glGenTextures(1, &tex);
-    glBindTexture(GL_TEXTURE_2D, tex);
+    GLuint tex;
+    //glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gimp_image.width, gimp_image.height, 0, GL_BGR, GL_UNSIGNED_BYTE, gimp_image.pixel_data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 }
 
 int main(int argc, char** argv) {
