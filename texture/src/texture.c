@@ -143,6 +143,7 @@ void init() {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gimp_image.width, gimp_image.height, 0, GL_BGR, GL_UNSIGNED_BYTE, gimp_image.pixel_data);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //glActiveTexture(GL_TEXTURE1);
 }
 
 int main(int argc, char** argv) {
