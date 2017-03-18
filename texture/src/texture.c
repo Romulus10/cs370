@@ -9,6 +9,8 @@
 #include <GL/glut.h>
 #include <math.h>
 
+#include "../assets/pip_boy.c"
+
 float *eye;
 
 float *transform_eye() {
@@ -138,7 +140,7 @@ void init() {
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, gimp_image.width, gimp_image.height, 0, GL_BGR, GL_UNSIGNED_BYTE, gimp_image.pixel_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GIMP_IMAGE_WIDTH, GIMP_IMAGE_HEIGHT, 0, GL_BGR, GL_UNSIGNED_BYTE, GIMP_IMAGE_PIXEL_DATA);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     //glActiveTexture(GL_TEXTURE1);
