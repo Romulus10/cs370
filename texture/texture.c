@@ -11,8 +11,9 @@
 #include <math.h>
 #include <time.h>
 
-GLuint raw_texture_load(const char *filename, int width, int height);
+#include "gimp_image.h"
 
+extern gimp_image pip_boy;
 static GLuint texture;
 
 void render() {
@@ -55,7 +56,8 @@ void init() {
     glLightfv(GL_LIGHT0, GL_POSITION, (GLfloat[]){2.0, 2.0, 2.0, 0.0});
     glLightfv(GL_LIGHT0, GL_AMBIENT, (GLfloat[]){1.0, 1.0, 1.0, 0.0});
 
-    texture = raw_texture_load("pip_boy.data", 200, 256);
+    //texture = raw_texture_load("pip_boy.data", 200, 256);
+    texture = pip_boy;
 }
 
 #if STUFF_IS_MOVING
@@ -65,7 +67,7 @@ void idle() {
 }
 #endif
 
-void resize(int w, int h) {}
+void resize(int w, int h) {
     glViewport(0, 0, (GLsizei) w, (GLsizei) h);
 }
 

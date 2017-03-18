@@ -7,12 +7,10 @@ OBJDIR=build/obj/
 CC=gcc
 
 make:
-	mkdir build
-	$(CC) texture.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o texture
+	$(CC) texture.c pip_boy.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o texture
 
 no_opt:
-	mkdir build
-	$(CC) texture.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o texture
+	$(CC) texture.c pip_boy.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o texture
 
 clean:
 	rm -rf texture
