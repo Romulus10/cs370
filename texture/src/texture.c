@@ -9,9 +9,9 @@
 #include <GL/glut.h>
 #include <math.h>
 
-#include "../assets/pip_boy.c"
+#include "../assets/pip_boy.c" // This is not ideal.
 
-float *eye;
+float *eye; // I wish this wasn't here but I'll optimize and clean later.
 
 float *transform_eye() {
     // Simplified algorithm for a full y-transform
@@ -36,15 +36,15 @@ void draw_triangles() {
     glBegin(GL_TRIANGLES);
 
     /*
-    static const float colors[6][3] = {
-        {1.0f,0.0f,0.0f},
-        {0.0f,1.0f,0.0f},
-        {0.0f,0.0f,1.0f},
-        {1.0f,0.0f,0.0f},
-        {0.0f,1.0f,0.0f},
-        {0.0f,0.0f,1.0f}
-    };
-    */
+       static const float colors[6][3] = {
+       {1.0f,0.0f,0.0f},
+       {0.0f,1.0f,0.0f},
+       {0.0f,0.0f,1.0f},
+       {1.0f,0.0f,0.0f},
+       {0.0f,1.0f,0.0f},
+       {0.0f,0.0f,1.0f}
+       };
+       */
 
     static const float triangles[36][3] = {
         {-0.5f,-0.5f,-0.5f},
@@ -86,24 +86,30 @@ void draw_triangles() {
     };
 
     int i;
-    int j = 0;
-    int k = 0;
+    //int j = 0;
+    //int k = 0;
 
     for (i = 0; i < 36; i = i + 6) {
-        if (j == 6) {
-            j = 0;
-            k++;
-        }
+        // ...why? Neither j nor k is ever used.
+        /* if (j == 6) {
+         *   j = 0;
+         *   k++;
+         * }
+         */
         //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
         glTexCoord2f(0.0f, 0.0f);
         glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
+        glTexCoord2f(1.0f, 0.0f);
         glVertex3f(triangles[i+1][0], triangles[i+1][1], triangles[i+1][2]);
+        glTexCoord2f(1.0f, 1.0f);
         glVertex3f(triangles[i+2][0], triangles[i+2][1], triangles[i+2][2]);
+        glTexCoord2f(0.0f, 0.0f);
         glVertex3f(triangles[i+3][0], triangles[i+3][1], triangles[i+3][2]);
+        glTexCoord2f(0.0f, 1.0f);
         glVertex3f(triangles[i+4][0], triangles[i+4][1], triangles[i+4][2]);
         glTexCoord2f(1.0f, 1.0f);
         glVertex3f(triangles[i+5][0], triangles[i+5][1], triangles[i+5][2]);
-        j++;
+        //j++;
     }
 
     glEnd();
@@ -140,10 +146,13 @@ void init() {
     GLuint tex;
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, GIMP_IMAGE_WIDTH, GIMP_IMAGE_HEIGHT, 0, GL_BGR, GL_UNSIGNED_BYTE, GIMP_IMAGE_PIXEL_DATA);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    //glActiveTexture(GL_TEXTURE1);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glTexImage2D(GL_TEXTURE_2D, 0, gimp_image.bytes_per_pixel, gimp_image.width, gimp_image.height, 0, GL_RGB, GL_UNSIGNED_BYTE, gimp_image.pixel_data);
 }
 
 int main(int argc, char** argv) {
@@ -155,6 +164,7 @@ int main(int argc, char** argv) {
     glutIdleFunc(glutPostRedisplay);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
+    glEnable(GL_BLEND);
     glutMainLoop();
     free(eye);
 }
