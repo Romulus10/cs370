@@ -9,8 +9,6 @@
 #include <GL/glut.h>
 #include <math.h>
 
-#include "../assets/pip_boy.h"
-
 float *eye;
 
 float *transform_eye() {

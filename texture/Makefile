@@ -8,11 +8,11 @@ CC=gcc
 
 make:
 	mkdir build
-	$(CC) src/texture.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
+	$(CC) src/texture.c assets/pip_boy.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
 
 no_opt:
 	mkdir build
-	$(CC) src/texture.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
+	$(CC) src/texture.c assets/pip_boy.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
 
 clean:
 	rm -rf build
