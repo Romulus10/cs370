@@ -86,12 +86,12 @@ void draw_triangles() {
     };
 
     float texcoords[] = {
-    0.0, 1.0,
-    0.0, 0.0,
-    1.0, 0.0,
-    0.0, 1.0,
-    1.0, 0.0,
-    1.0, 1.0
+        0.0, 1.0,
+        0.0, 0.0,
+        1.0, 0.0,
+        0.0, 1.0,
+        1.0, 0.0,
+        1.0, 1.0
     };
 
     int i;
@@ -100,14 +100,17 @@ void draw_triangles() {
 
     for (i = 0; i < 36; i++) {
         // ...why? Neither j nor k is ever used.
-        if (j == 6) {
-           j = 0;
-           //k++;
-        }
-        //glColor3f(colors[k][0], colors[k][1], colors[k][2]); 
-        
+        //if (j == 12) {
+        //    j = 0;
+            //k++;
+        //}
+        //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
+        glTexCoord2f(texcoords[j], texcoords[j+1]);
         glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
-        j++;
+        if (j == 12) {
+            j = 0;
+        }
+        j = j + 2;
     }
 
     glEnd();
