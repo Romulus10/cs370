@@ -85,31 +85,29 @@ void draw_triangles() {
         {0.5f,-0.5f, 0.5f}
     };
 
+    float texcoords[] = {
+    0.0, 1.0,
+    0.0, 0.0,
+    1.0, 0.0,
+    0.0, 1.0,
+    1.0, 0.0,
+    1.0, 1.0
+    };
+
     int i;
-    //int j = 0;
+    int j = 0;
     //int k = 0;
 
-    for (i = 0; i < 36; i = i + 6) {
+    for (i = 0; i < 36; i++) {
         // ...why? Neither j nor k is ever used.
-        /* if (j == 6) {
-         *   j = 0;
-         *   k++;
-         * }
-         */
-        //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
-        glTexCoord2f(0.0f, 0.0f);
+        if (j == 6) {
+           j = 0;
+           //k++;
+        }
+        //glColor3f(colors[k][0], colors[k][1], colors[k][2]); 
+        
         glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(triangles[i+1][0], triangles[i+1][1], triangles[i+1][2]);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(triangles[i+2][0], triangles[i+2][1], triangles[i+2][2]);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(triangles[i+3][0], triangles[i+3][1], triangles[i+3][2]);
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(triangles[i+4][0], triangles[i+4][1], triangles[i+4][2]);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(triangles[i+5][0], triangles[i+5][1], triangles[i+5][2]);
-        //j++;
+        j++;
     }
 
     glEnd();
