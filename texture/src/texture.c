@@ -8,8 +8,7 @@
 #include <stdio.h>
 #include <GL/glut.h>
 #include <math.h>
-
-#include "../assets/pip_boy.c" // This is not ideal.
+#include <SOIL/SOIL.h>
 
 float *eye; // I wish this wasn't here but I'll optimize and clean later.
 
@@ -153,7 +152,10 @@ void init() {
     glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    glTexImage2D(GL_TEXTURE_2D, 0, gimp_image.bytes_per_pixel, gimp_image.width, gimp_image.height, 0, GL_RGB, GL_UNSIGNED_BYTE, gimp_image.pixel_data);
+    int width, height;
+    unsigned char* image = SOIL_load_image("../assets/pip_boy.png", &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    SOIL_free_image_data(image);
 }
 
 int main(int argc, char** argv) {
