@@ -8,7 +8,8 @@
 #include <stdio.h>
 #include <GL/glut.h>
 #include <math.h>
-#include <SOIL/SOIL.h>
+
+#include "SOIL.h"
 
 float *eye; // I wish this wasn't here but I'll optimize and clean later.
 
@@ -35,15 +36,15 @@ void draw_triangles() {
     glBegin(GL_TRIANGLES);
 
     /*
-       static const float colors[6][3] = {
-       {1.0f,0.0f,0.0f},
-       {0.0f,1.0f,0.0f},
-       {0.0f,0.0f,1.0f},
-       {1.0f,0.0f,0.0f},
-       {0.0f,1.0f,0.0f},
-       {0.0f,0.0f,1.0f}
-       };
-       */
+     *static const float colors[6][3] = {
+     *{1.0f,0.0f,0.0f},
+     *{0.0f,1.0f,0.0f},
+     *{0.0f,0.0f,1.0f},
+     *{1.0f,0.0f,0.0f},
+     *{0.0f,1.0f,0.0f},
+     *{0.0f,0.0f,1.0f}
+     *};
+     */
 
     static const float triangles[36][3] = {
         {-0.5f,-0.5f,-0.5f},
@@ -99,9 +100,10 @@ void draw_triangles() {
 
     for (i = 0; i < 36; i++) {
         // ...why? Neither j nor k is ever used.
+        // just kidding I'm using j now.
         //if (j == 12) {
         //    j = 0;
-            //k++;
+        //k++;
         //}
         //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
         glTexCoord2f(texcoords[j], texcoords[j+1]);
@@ -148,9 +150,9 @@ void init() {
     glBindTexture(GL_TEXTURE_2D, tex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     int width, height;
     unsigned char* image = SOIL_load_image("../assets/pip_boy.png", &width, &height, 0, SOIL_LOAD_RGB);
