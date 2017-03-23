@@ -109,7 +109,7 @@ void draw_triangles() {
     int j = 0;
     //int k = 0;
 
-    for (i = 0; i < 9; i++) {
+    for (i = 0; i < 12; i++) {
         // ...why? Neither j nor k is ever used.
         // just kidding I'm using j now.
         //if (j == 12) {
