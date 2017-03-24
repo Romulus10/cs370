@@ -46,76 +46,51 @@ void draw_triangles() {
      *};
      */
 
-    static const float triangles[36][3] = {
-        {-0.5f,-0.5f,-0.5f},
-        {-0.5f,-0.5f, 0.5f},
-        {-0.5f, 0.5f, 0.5f},
-        {0.5f, 0.5f,-0.5f},
-        {-0.5f,-0.5f,-0.5f},
-        {-0.5f, 0.5f,-0.5f},
-        {0.5f,-0.5f, 0.5f},
-        {-0.5f,-0.5f,-0.5f},
-        {0.5f,-0.5f,-0.5f},
-        {0.5f, 0.5f,-0.5f},
-        {0.5f,-0.5f,-0.5f},
-        {-0.5f,-0.5f,-0.5f},
-        {-0.5f,-0.5f,-0.5f},
-        {-0.5f, 0.5f, 0.5f},
-        {-0.5f, 0.5f,-0.5f},
-        {0.5f,-0.5f, 0.5f},
-        {-0.5f,-0.5f, 0.5f},
-        {-0.5f,-0.5f,-0.5f},
-        {-0.5f, 0.5f, 0.5f},
-        {-0.5f,-0.5f, 0.5f},
-        {0.5f,-0.5f, 0.5f},
-        {0.5f, 0.5f, 0.5f},
-        {0.5f,-0.5f,-0.5f},
-        {0.5f, 0.5f,-0.5f},
-        {0.5f,-0.5f,-0.5f},
-        {0.5f, 0.5f, 0.5f},
-        {0.5f,-0.5f, 0.5f},
-        {0.5f, 0.5f, 0.5f},
-        {0.5f, 0.5f,-0.5f},
-        {-0.5f, 0.5f,-0.5f},
-        {0.5f, 0.5f, 0.5f},
-        {-0.5f, 0.5f,-0.5f},
-        {-0.5f, 0.5f, 0.5f},
-        {0.5f, 0.5f, 0.5f},
-        {-0.5f, 0.5f, 0.5f},
-        {0.5f,-0.5f, 0.5f}
+    static const float triangles[][3] = {
+        { 0.5, 0.5, 0.5},
+        { 0.5, 0.5,-0.5},
+        { 0.5,-0.5, 0.5},
+        { 0.5,-0.5, 0.5},
+        {-0.5, 0.5, 0.5},
+        {-0.5, 0.5,-0.5},
+        {-0.5,-0.5, 0.5},
+        {-0.5,-0.5,-0.5}
     };
 
-    float texcoords[] = {
-        0.0, 1.0,
-        0.0, 0.0,
-        1.0, 0.0,
-        0.0, 1.0,
-        1.0, 0.0,
-        1.0, 1.0
-    };
-
-    int i;
-    int j = 0;
+    //int i;
+    //int j = 0;
     //int k = 0;
 
-    for (i = 0; i < 36; i++) {
+    //for (i = 0; i < 6; i = i + 6) {
         // ...why? Neither j nor k is ever used.
         // just kidding I'm using j now.
+        // Not anymore!
         //if (j == 12) {
         //    j = 0;
         //k++;
         //}
-        //glColor3f(colors[k][0], colors[k][1], colors[k][2]);
-        glTexCoord2f(texcoords[j], texcoords[j+1]);
-        glVertex3f(triangles[i][0], triangles[i][1], triangles[i][2]);
-        if (j == 12) {
-            j = 0;
-        }
-        j = j + 2;
-    }
+        //glColor3f(1.0f, 0.0f, 0.0f);
+        //glTexCoord2f(texcoords[j], texcoords[j+1]);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3fv(triangles[0]);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3fv(triangles[5]);
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3fv(triangles[4]);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3fv(triangles[0]);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3fv(triangles[5]);
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3fv(triangles[1]);
+        //if (j == 12) {
+        //    j = 0;
+        //}
+        //j = j + 2;
+    //}
 
     glEnd();
-    glFlush();
+    //glFlush();
 }
 
 void display(void) {
@@ -146,17 +121,19 @@ void init() {
     eye[2] = 5.0f;
     eye[3] = 1.0f;
     GLuint tex;
+    //int width, height;
+    //unsigned char* image = SOIL_load_image("../assets/pip_boy.png", &width, &height, 0, SOIL_LOAD_RGB);
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
     int width, height;
-    unsigned char* image = SOIL_load_image("../assets/pip_boy.png", &width, &height, 0, SOIL_LOAD_RGB);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    unsigned char* image = SOIL_load_image("pip_boy.png", &width, &height, 0, SOIL_LOAD_RGB);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 256, 256, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
     SOIL_free_image_data(image);
 }
 
