@@ -7,13 +7,11 @@ OBJDIR=build/obj/
 CC=gcc
 
 make:
-	mkdir build
-	$(CC) src/texture.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
+	$(CC) texture.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o texture
 
 no_opt:
-	mkdir build
-	$(CC) src/texture.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/texture
+	$(CC) texture.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o texture
 
 clean:
-	rm -rf build
+	rm texture
 	rm -rf vgcore.*
