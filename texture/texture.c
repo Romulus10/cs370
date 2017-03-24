@@ -50,7 +50,7 @@ void draw_triangles() {
         { 0.5, 0.5, 0.5},
         { 0.5, 0.5,-0.5},
         { 0.5,-0.5, 0.5},
-        { 0.5,-0.5, 0.5},
+        { 0.5,-0.5,-0.5},
         {-0.5, 0.5, 0.5},
         {-0.5, 0.5,-0.5},
         {-0.5,-0.5, 0.5},
@@ -62,31 +62,31 @@ void draw_triangles() {
     //int k = 0;
 
     //for (i = 0; i < 6; i = i + 6) {
-        // ...why? Neither j nor k is ever used.
-        // just kidding I'm using j now.
-        // Not anymore!
-        //if (j == 12) {
-        //    j = 0;
-        //k++;
-        //}
-        //glColor3f(1.0f, 0.0f, 0.0f);
-        //glTexCoord2f(texcoords[j], texcoords[j+1]);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3fv(triangles[0]);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3fv(triangles[5]);
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3fv(triangles[4]);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3fv(triangles[0]);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3fv(triangles[5]);
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3fv(triangles[1]);
-        //if (j == 12) {
-        //    j = 0;
-        //}
-        //j = j + 2;
+    // ...why? Neither j nor k is ever used.
+    // just kidding I'm using j now.
+    // Not anymore!
+    //if (j == 12) {
+    //    j = 0;
+    //k++;
+    //}
+    //glColor3f(1.0f, 0.0f, 0.0f);
+    //glTexCoord2f(texcoords[j], texcoords[j+1]);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3fv(triangles[0]);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3fv(triangles[5]);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3fv(triangles[4]);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3fv(triangles[0]);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3fv(triangles[5]);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3fv(triangles[1]);
+    //if (j == 12) {
+    //    j = 0;
+    //}
+    //j = j + 2;
     //}
 
     glEnd();
