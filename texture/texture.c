@@ -35,13 +35,13 @@ void draw_triangles() {
         {-0.5,-0.5,-0.5}
     };
 
-    static const float texcoords[][2] = {
-        {1.0, 0.0},
-        {1.0, 1.0},
-        {0.0, 0.0},
-        {0.0, 1.0},
-        {1.0, 1.0},
-        {0.0, 0.0}
+    static const float texcoords[12] = {
+        1.0, 0.0,
+        1.0, 1.0,
+        0.0, 0.0,
+        0.0, 1.0,
+        1.0, 1.0,
+        0.0, 0.0
     };
 
     static const int triangles[48] = {
@@ -56,14 +56,14 @@ void draw_triangles() {
     int i;
     int j = 0;
 
-    for (i = 0; i < 48; i++) {
-        if (j == 6) {
+    for (i = 0; i < 3; i++) {
+        if (j == 12) {
             j = 0;
         } else {
-            j++;
+            j = j + 2;
         }
         int k = triangles[i];
-        glTexCoord2fv(texcoords[j]);
+        glTexCoord2f(texcoords[j], texcoords[j+1]);
         glVertex3fv(vertices[k]);
     }
     glEnd();
