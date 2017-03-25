@@ -113,7 +113,6 @@ void init() {
 
 int main(int argc, char** argv) {
     glutInit(&argc, argv);
-    init();
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutCreateWindow("simple");
     glutDisplayFunc(display);
@@ -121,6 +120,7 @@ int main(int argc, char** argv) {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
     glEnable(GL_BLEND);
+    init();
     glutMainLoop();
     free(eye);
 }
