@@ -56,7 +56,7 @@ void draw_triangles() {
     int i;
     int j = 0;
 
-    for (i = 0; i < 3; i++) {
+    for (i = 0; i < 6; i++) {
         if (j == 12) {
             j = 0;
         } else {
