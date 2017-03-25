@@ -11,20 +11,9 @@
 
 #include "SOIL.h"
 
-float *eye; // I wish this wasn't here but I'll optimize and clean later.
+float *eye;
 
 float *transform_eye() {
-    // Simplified algorithm for a full y-transform
-    // This takes the full matrix multiplication and
-    // reduces it down to a manageable number of steps.
-    // ISSUE:
-    //  math.h trig functions deal in radians.
-    //  degrees = radians * (π / 180)
-    //  floats lose some precision,
-    //  leading to the observer straying from
-    //  a perfect rotation.
-    // Adapted from:
-    // https://open.gl/transformations
     eye[0] = ((cos(1 * (M_PI/180)) * eye[0]) + (sin(1 * (M_PI/180)) * eye[2]));
     eye[1] = eye[1];
     eye[2] = ((-sin(1 * (M_PI/180)) * eye[0]) + (cos(1 * (M_PI/180)) * eye[2]));
@@ -35,18 +24,7 @@ void draw_triangles() {
     glClear(GL_COLOR_BUFFER_BIT);
     glBegin(GL_TRIANGLES);
 
-    /*
-     *static const float colors[6][3] = {
-     *{1.0f,0.0f,0.0f},
-     *{0.0f,1.0f,0.0f},
-     *{0.0f,0.0f,1.0f},
-     *{1.0f,0.0f,0.0f},
-     *{0.0f,1.0f,0.0f},
-     *{0.0f,0.0f,1.0f}
-     *};
-     */
-
-    static const float triangles[][3] = {
+    static const float vertices[][3] = {
         { 0.5, 0.5, 0.5},
         { 0.5, 0.5,-0.5},
         { 0.5,-0.5, 0.5},
@@ -57,40 +35,38 @@ void draw_triangles() {
         {-0.5,-0.5,-0.5}
     };
 
-    //int i;
-    //int j = 0;
-    //int k = 0;
+    static const float texcoords[][2] = {
+        {0.0, 1.0},
+        {1.0, 1.0},
+        {0.0, 0.0},
+        {1.0, 0.0},
+        {1.0, 1.0},
+        {0.0, 0.0}
+    };
 
-    //for (i = 0; i < 6; i = i + 6) {
-    // ...why? Neither j nor k is ever used.
-    // just kidding I'm using j now.
-    // Not anymore!
-    //if (j == 12) {
-    //    j = 0;
-    //k++;
-    //}
-    //glColor3f(1.0f, 0.0f, 0.0f);
-    //glTexCoord2f(texcoords[j], texcoords[j+1]);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3fv(triangles[0]);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3fv(triangles[5]);
-    glTexCoord2f(0.0f, 1.0f);
-    glVertex3fv(triangles[4]);
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3fv(triangles[0]);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3fv(triangles[5]);
-    glTexCoord2f(0.0f, 1.0f);
-    glVertex3fv(triangles[1]);
-    //if (j == 12) {
-    //    j = 0;
-    //}
-    //j = j + 2;
-    //}
+    static const int triangles[48] = {
+        4,0,6,2,0,6,
+        1,5,3,7,5,3,
+        4,0,5,1,0,5,
+        0,1,2,3,1,2,
+        5,4,7,6,4,7,
+        6,2,7,3,2,7
+    };
 
+    int i;
+    int j = 0;
+
+    for (i = 0; i < 48; i++) {
+        if (j == 6) {
+            j = 0;
+        } else {
+            j++;
+        }
+        int k = triangles[i];
+        glTexCoord2fv(texcoords[j]);
+        glVertex3fv(vertices[k]);
+    }
     glEnd();
-    //glFlush();
 }
 
 void display(void) {
@@ -100,7 +76,7 @@ void display(void) {
     gluPerspective( 40.0f, 1.0f, 1.0f, 10000.0f );
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    //printf("%f %f %f\n", eye[0], eye[1], eye[2]);
+
     gluLookAt( eye[0], eye[1], eye[2],
             0.0f, 0.0f, 0.0f,
             0.0f, 1.0f, 0.0f
@@ -121,8 +97,6 @@ void init() {
     eye[2] = 5.0f;
     eye[3] = 1.0f;
     GLuint tex;
-    //int width, height;
-    //unsigned char* image = SOIL_load_image("../assets/pip_boy.png", &width, &height, 0, SOIL_LOAD_RGB);
     glGenTextures(1, &tex);
     glBindTexture(GL_TEXTURE_2D, tex);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
