@@ -20,10 +20,7 @@ float *transform_eye() {
     eye[3] = 1;
 }
 
-void draw_triangles() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glBegin(GL_TRIANGLES);
-
+void draw_square(int i) {
     static const float vertices[][3] = {
         { 0.5, 0.5, 0.5},
         { 0.5, 0.5,-0.5},
@@ -35,13 +32,13 @@ void draw_triangles() {
         {-0.5,-0.5,-0.5}
     };
 
-    static const float texcoords[12] = {
-        1.0, 0.0,
-        1.0, 1.0,
-        0.0, 0.0,
-        0.0, 1.0,
-        1.0, 1.0,
-        0.0, 0.0
+    static const float texcoords[][2] = {
+        {0.0, 0.0},
+        {1.0, 0.0},
+        {0.0, 1.0},
+        {1.0, 1.0},
+        {1.0, 0.0},
+        {0.0, 1.0}
     };
 
     static const int triangles[48] = {
@@ -53,19 +50,23 @@ void draw_triangles() {
         6,2,7,3,2,7
     };
 
-    int i;
-    int j = 0;
-
-    for (i = 0; i < 6; i++) {
-        if (j == 12) {
-            j = 0;
-        } else {
-            j = j + 2;
-        }
-        int k = triangles[i];
-        glTexCoord2f(texcoords[j], texcoords[j+1]);
-        glVertex3fv(vertices[k]);
+    int j;
+    for (j = 0; j < 6; j++) {
+        glTexCoord2fv(texcoords[j]);
+        glVertex3fv(vertices[triangles[i+j]]);
     }
+}
+
+void draw_cube() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glBegin(GL_TRIANGLES);
+
+    int i;
+
+    for (i = 0; i < 48; i = i + 6){
+        draw_square(i);
+    }
+
     glEnd();
 }
 
@@ -83,7 +84,7 @@ void display(void) {
             );
 
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    draw_triangles();
+    draw_cube();
 
     transform_eye();
 
