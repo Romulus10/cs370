@@ -1,32 +1,57 @@
-#include <GL/glut.h>         /* glut.h includes gl.h and glu.h*/
+#include <GL/glut.h>
+#define true 0
+#define false 1
 
-void drawpixel(float x,float y,float r,float g,float b) // assume x,y 0-100
-{
+void drawpixel(float x,float y,float r,float g,float b) {
 #define SZ  .02
-	glBegin(GL_TRIANGLES);
-		glColor3f(r,g,b);
-	 	glVertex2f(-1.0+.02*(float)x,     -1.0+.02*(float)y);
-	 	glVertex2f(-1.0+.02*(float)x,     -1.0+.02*(float)y+ SZ);
-	 	glVertex2f(-1.0+.02*(float)x+ SZ, -1.0+.02*(float)y);
+    glBegin(GL_TRIANGLES);
+    glColor3f(r,g,b);
+    glVertex2f(-1.0+.02*(float)x,     -1.0+.02*(float)y);
+    glVertex2f(-1.0+.02*(float)x,     -1.0+.02*(float)y+ SZ);
+    glVertex2f(-1.0+.02*(float)x+ SZ, -1.0+.02*(float)y);
 
-	 	glVertex2f(-1.0+.02*(float)x+ SZ, -1.0+.02*(float)y);
-	 	glVertex2f(-1.0+.02*(float)x+ SZ, -1.0+.02*(float)y+ SZ);
-	 	glVertex2f(-1.0+.02*(float)x,     -1.0+.02*(float)y+ SZ);
-	glEnd();
+    glVertex2f(-1.0+.02*(float)x+ SZ, -1.0+.02*(float)y);
+    glVertex2f(-1.0+.02*(float)x+ SZ, -1.0+.02*(float)y+ SZ);
+    glVertex2f(-1.0+.02*(float)x,     -1.0+.02*(float)y+ SZ);
+    glEnd();
 }
 
-void display(void)
-{
-	glClear(GL_COLOR_BUFFER_BIT); 
-	drawpixel(50.0,50.0,1.0,1.0,1.0); 
-	glFlush(); 
+int intersect(p1, p2, i) {
+
+}
+
+int ray(p1, p2) {
+    int i;
+    for (i = 0; i = all_triangles) {
+        if (intersect(p1, p2, i)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+
+void display(void) {
+    glClear(GL_COLOR_BUFFER_BIT);
+    int *screen;
+    int x,y;
+    float *eye
+    for (x = 0; x < length_screen; x++) {
+        for (y = 0; y < width_screen; y++) {
+            if (ray(x, y, screen, eye)) {
+                draw_pixel(x, y, 1,1,1);
+            } else {
+                draw_pixel(x, y, 0,0,0);
+            }
+        }
+    }
+    glFlush();
 }
 
 
-int main(int argc, char** argv)
-{
-        glutInit(&argc,argv);
-	glutCreateWindow("simple"); 
-	glutDisplayFunc(display);
-	glutMainLoop();
+int main(int argc, char** argv) {
+    glutInit(&argc,argv);
+    glutCreateWindow("simple");
+    glutDisplayFunc(display);
+    glutMainLoop();
 }
