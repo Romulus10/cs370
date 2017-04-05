@@ -2,6 +2,31 @@
 #define true 0
 #define false 1
 
+typedef struct vector {
+    float a;
+    float b;
+    float c;
+} vector;
+
+typedef struct point {
+    float a;
+    float b;
+    float c;
+} point;
+
+typedef struct triangle {
+    point a;
+    point b;
+    point c;
+} triangle;
+
+float cross_product(vec_one, vec_two) {
+
+}
+
+float dot_product(vec_one, vec_two) {
+
+}
 void drawpixel(float x,float y,float r,float g,float b) {
 #define SZ  .02
     glBegin(GL_TRIANGLES);
