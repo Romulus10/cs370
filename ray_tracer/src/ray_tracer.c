@@ -2,8 +2,12 @@
 
 #include <stdio.h>
 
-#define true 0
-#define false 1
+// Boolean Type Code
+typedef int bool;
+#define true 1
+#define false 0
+
+// Graphics Math Library Functions
 
 #define TRI_NUM 1
 
@@ -19,6 +23,18 @@ typedef struct triangle {
     set c;
 } triangle;
 
+void print_set(set x, bool y) {
+    printf("{%f, %f, %f}", x.x, x.y, x.z);
+    if (y) printf("\n");
+}
+
+void print_triangle(triangle x) {
+    printf("{\n");
+    print_set(x.a, true);
+    print_set(x.b, true);
+    print_set(x.c, true);
+    printf("}\n");
+}
 set cross_product(set u, set v) {
     set r;
     r.x = ((u.y * v.z) - (u.z * v.y));
@@ -53,6 +69,8 @@ set pt_sub(set a, set b) {
     return r;
 }
 
+// Ray Tracer Code
+
 void draw_pixel(float x,float y,float r,float g,float b) {
 #define SZ  .02
     glBegin(GL_TRIANGLES);
@@ -67,7 +85,8 @@ void draw_pixel(float x,float y,float r,float g,float b) {
     glEnd();
 }
 
-int intersect(set p1, set p2, triangle i) {
+
+bool intersect(set p1, set p2, triangle i) {
     set N = cross_product(pt_sub(i.b, i.a), pt_sub(i.c, i.a));
     float U = (dot_product(N, pt_sub(i.a, p1))) / (dot_product(N, pt_sub(p2, p1)));
     set I = pt_add(p1, scalar_dot(U, pt_sub(p2, p1)));
@@ -87,7 +106,7 @@ int intersect(set p1, set p2, triangle i) {
     }
 }
 
-int ray(set p1, set p2, triangle *triangles) {
+bool ray(set p1, set p2, triangle *triangles) {
     int i;
     for (i = 0; i < TRI_NUM; i++) {
         if (intersect(p1, p2, triangles[i])) {
@@ -96,18 +115,6 @@ int ray(set p1, set p2, triangle *triangles) {
             return false;
         }
     }
-}
-
-void print_set(set x) {
-    printf("{%f, %f, %f}", x.x, x.y, x.z);
-}
-
-void print_triangle(triangle x) {
-    printf("{\n");
-    print_set(x.a); printf(",\n");
-    print_set(x.b); printf(",\n");
-    print_set(x.c); printf(",\n");
-    printf("}\n");
 }
 
 void display(void) {
@@ -119,7 +126,6 @@ void display(void) {
     eye.z = -2.0;
     triangle *triangles = malloc(sizeof(triangle) * TRI_NUM);
     triangles[0] = (triangle){(set) { 1, 0, 6 },  (set) { 0.5, 1, 6 }, (set) { 0, 0, 6 }};
-    print_triangle(triangles[0]);
     for (x = 0; x < 100; x++) {
         for (y = 0; y < 100; y++) {
             set pt;
@@ -136,8 +142,42 @@ void display(void) {
     glFlush();
 }
 
+bool assert_eq_float(float a, float b) {
+    if (a == b) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool assert_set_eq(set a, set b) {
+    if (a.x == b.x && a.y == b.y && a.z == b.z) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void run_tests() {
+    int failed = 2;
+
+    // Set tests here.
+    set p1 = (set) { 0, 0, 0 };
+    set p2 = (set) { 1, 1, 1 };
+    set p3 = (set) { 1, 1, 1 };
+    failed -= assert_set_eq(pt_add(p1, p2), p3);
+    failed -= assert_set_eq(pt_sub(p3, p2), p1);
+
+    if (failed > 0) {
+        printf("Tests failed.");
+        exit(1);
+    } else {
+        printf("Passed all tests.");
+    }
+}
 
 int main(int argc, char** argv) {
+    run_tests();
     glutInit(&argc,argv);
     glutCreateWindow("simple");
     glutDisplayFunc(display);
