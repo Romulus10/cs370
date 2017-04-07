@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 
+// Simulates a boolean datatype.
 typedef int bool;
 #define true 1
 #define false 0
@@ -9,12 +10,22 @@ typedef int bool;
 #define TRI_NUM 1
 
 typedef struct set {
+    /*
+     * Universal structure used
+     * to implement both points
+     * and vectors.
+     */
     float x;
     float y;
     float z;
 } set;
 
 typedef struct triangle {
+    /*
+     * A collection of points
+     * representing a triangle
+     * in memory.
+     */
     set a;
     set b;
     set c;
