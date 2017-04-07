@@ -158,21 +158,24 @@ bool assert_true(bool r) {
 }
 
 void run_tests() {
-    int failed = 4;
-
-    // Set tests here.
+    int failed = 6;
+    int done = failed;
     set p1 = (set) { 0, 0, 0 };
     set p2 = (set) { 1, 1, 1 };
     set p3 = (set) { 1, 1, 1 };
-    set ey = (set) { .5, .5, -2};
+    set p4 = (set) { 5, 5, 5 };
+    set p5 = (set) { .5, .5, -2 };
+    set p6 = (set) { .5, .5, 0 };
     triangle tr = (triangle) { (set){1, 1, 0}, (set){1, -1, 0}, (set){-1, -1, 0}};
     assert_set_eq(pt_add(p1, p2), p3) ? failed-- : printf("pt_add fails.\n");
     assert_set_eq(pt_sub(p3, p2), p1) ? failed-- : printf("pt_sub fails.\n");
-    assert_true(intersect(ey, p1, tr)) ? failed-- : printf("intersect fails.\n");
+    assert_true(intersect(p5, p1, tr)) ? failed-- : printf("intersect fails.\n");
+    assert_true(intersect(p5, p6, tr)) ? failed-- : printf("intersect fails.\n");
     assert_set_eq(cross_product(p1, p2), p1) ? failed-- : printf("cross_product fails.\n");
+    assert_set_eq(scalar_dot(5, p2), p4) ? failed-- : printf("scalar_dot fails.\n");
 
     if (failed > 0) {
-        printf("Tests failed.");
+        printf("%d/%d tests failed.", failed, done);
     } else {
         printf("Passed all tests.");
     }
