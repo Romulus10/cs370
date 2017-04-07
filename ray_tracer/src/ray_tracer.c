@@ -2,12 +2,9 @@
 
 #include <stdio.h>
 
-// Boolean Type Code
 typedef int bool;
 #define true 1
 #define false 0
-
-// Graphics Math Library Functions
 
 #define TRI_NUM 1
 
@@ -63,7 +60,7 @@ set pt_add(set a, set b) {
 
 set pt_sub(set a, set b) {
     set r;
-    r.x = a.x - b.y;
+    r.x = a.x - b.x;
     r.y = a.y - b.y;
     r.z = a.z - b.z;
     return r;
@@ -96,10 +93,8 @@ bool intersect(set p1, set p2, triangle i) {
     set c1 = cross_product(v1, v2);
     set c2 = cross_product(v2, v3);
     set c3 = cross_product(v3, v1);
-    float d1 = dot_product(c1, c2);
-    float d2 = dot_product(c2, c3);
-    float d3 = dot_product(c3, c1);
-    if ((d1 > 0) && (d2 > 0) && (d3 > 0)) {
+    set d = (set){dot_product(c1, c2), dot_product(c2, c3), dot_product(c3, c1)};
+    if ((d.x > 0) && (d.y > 0) && (d.z > 0)) {
         return true;
     } else {
         return false;
@@ -158,19 +153,26 @@ bool assert_set_eq(set a, set b) {
     }
 }
 
+bool assert_true(bool r) {
+    return r;
+}
+
 void run_tests() {
-    int failed = 2;
+    int failed = 4;
 
     // Set tests here.
     set p1 = (set) { 0, 0, 0 };
     set p2 = (set) { 1, 1, 1 };
     set p3 = (set) { 1, 1, 1 };
-    failed -= assert_set_eq(pt_add(p1, p2), p3);
-    failed -= assert_set_eq(pt_sub(p3, p2), p1);
+    set ey = (set) { .5, .5, -2};
+    triangle tr = (triangle) { (set){1, 1, 0}, (set){1, -1, 0}, (set){-1, -1, 0}};
+    assert_set_eq(pt_add(p1, p2), p3) ? failed-- : printf("pt_add fails.\n");
+    assert_set_eq(pt_sub(p3, p2), p1) ? failed-- : printf("pt_sub fails.\n");
+    assert_true(intersect(ey, p1, tr)) ? failed-- : printf("intersect fails.\n");
+    assert_set_eq(cross_product(p1, p2), p1) ? failed-- : printf("cross_product fails.\n");
 
     if (failed > 0) {
         printf("Tests failed.");
-        exit(1);
     } else {
         printf("Passed all tests.");
     }
