@@ -121,16 +121,16 @@ void display(void) {
     eye.z = -2.0;
     triangle *triangles = malloc(sizeof(triangle) * TRI_NUM);
     triangles[0] = (triangle){(set) { 1, 0, 6 },  (set) { 0.5, 1, 6 }, (set) { 0, 0, 6 }};
-    for (x = 0; x < 100; x++) {
-        for (y = 0; y < 100; y++) {
+    for (x = 0; x < 1; x += .01) {
+        for (y = 0; y < 1; y += .01) {
             set pt;
             pt.x = x;
             pt.y = y;
             pt.z = 0;
             if (ray(eye, pt, triangles)) {
-                draw_pixel(x, y, 1,1,1);
+                draw_pixel(x*100, y*100, 1,1,1);
             } else {
-                draw_pixel(x, y, 0,0,0);
+                draw_pixel(x*100, y*100, 0,0,0);
             }
         }
     }
