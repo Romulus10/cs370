@@ -22,9 +22,8 @@ typedef struct set {
 
 typedef struct triangle {
     /*
-     * A collection of points
-     * representing a triangle
-     * in memory.
+     * A collection of sets
+     * representing a triangle.
      */
     set a;
     set b;
@@ -43,6 +42,7 @@ void print_triangle(triangle x) {
     print_set(x.c, true);
     printf("}\n");
 }
+
 set cross_product(set u, set v) {
     set r;
     r.x = ((u.y * v.z) - (u.z * v.y));
@@ -166,6 +166,10 @@ bool assert_set_eq(set a, set b) {
 
 bool assert_true(bool r) {
     return r;
+}
+
+bool assert_false(bool r) {
+    return !r;
 }
 
 void run_tests() {
