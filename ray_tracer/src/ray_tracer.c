@@ -93,11 +93,24 @@ void draw_pixel(float x,float y,float r,float g,float b) {
     glEnd();
 }
 
-
 bool intersect(set p1, set p2, triangle i) {
-    set N = cross_product(pt_sub(i.b, i.a), pt_sub(i.c, i.a));
-    float U = (dot_product(N, pt_sub(i.a, p1))) / (dot_product(N, pt_sub(p2, p1)));
-    set I = pt_add(p1, scalar_dot(U, pt_sub(p2, p1)));
+    /*
+     * Stretched this out a lot to try to
+     * debug it. I don't know what step
+     * it's going wrong on, which this
+     * should help.
+     */
+    set p = pt_sub(i.b, i.a);
+    set q = pt_sub(i.c, i.a);
+    set N = cross_product(p, q);
+    set d = pt_sub(i.a, p1);
+    float r = dot_product(N, d);
+    set m = pt_sub(p2,p1);
+    float e = dot_product(N, m);
+    float U = r / e;
+    set y = pt_sub(p2,p1);
+    set s = scalar_dot(U, y);
+    set I = pt_add(p1, s);
     set v1 = pt_sub(i.a, I);
     set v2 = pt_sub(i.b, I);
     set v3 = pt_sub(i.c, I);
