@@ -103,8 +103,8 @@ bool intersect(set p1, set p2, triangle i) {
     set p = pt_sub(i.b, i.a);
     set q = pt_sub(i.c, i.a);
     set N = cross_product(p, q);
-    set d = pt_sub(i.a, p1);
-    float r = dot_product(N, d);
+    set a = pt_sub(i.a, p1);
+    float r = dot_product(N, a);
     set m = pt_sub(p2,p1);
     float e = dot_product(N, m);
     float U = r / e;
