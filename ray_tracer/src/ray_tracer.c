@@ -118,6 +118,9 @@ bool intersect(set p1, set p2, triangle i) {
     set c2 = cross_product(v2, v3);
     set c3 = cross_product(v3, v1);
     set d = (set){dot_product(c1, c2), dot_product(c2, c3), dot_product(c3, c1)};
+    if (d.x == 0) d.x = 0;
+    if (d.y == 0) d.y = 0;
+    if (d.z == 0) d.z = 0;
     if ((d.x > 0) && (d.y > 0) && (d.z > 0)) {
         return true;
     } else {
@@ -203,9 +206,9 @@ void run_tests() {
     assert_set_eq(scalar_dot(5, p2), p4) ? failed-- : printf("scalar_dot fails.\n");
 
     if (failed > 0) {
-        printf("%d/%d tests failed.", failed, done);
+        printf("%d/%d tests failed.\n", failed, done);
     } else {
-        printf("Passed all tests.");
+        printf("Passed all tests.\n");
     }
 }
 
