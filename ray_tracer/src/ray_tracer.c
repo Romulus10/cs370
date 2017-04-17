@@ -154,7 +154,7 @@ void display(void) {
             pt.x = x;
             pt.y = y;
             pt.z = 0;
-            if (ray(eye, pt, triangles)) {
+            if (ray(pt, eye, triangles)) {
                 draw_pixel(x*100, y*100, 1,1,1);
             } else {
                 draw_pixel(x*100, y*100, 0,0,0);
