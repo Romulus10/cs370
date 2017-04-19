@@ -8,15 +8,14 @@ CC=gcc
 
 make:
 	mkdir build
-	$(CC) src/ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/ray_tracer
+	$(CC) src/ray_tracer.c src/ops.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/ray_tracer
 
 no_opt:
 	mkdir build
-	$(CC) src/ray_tracer.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/ray_tracer
+	$(CC) src/ray_tracer.c src/ops.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/ray_tracer
 
 clean:
 	rm -rf build
-	rm -rf vgcore.*
 
 run:
 	build/ray_tracer
