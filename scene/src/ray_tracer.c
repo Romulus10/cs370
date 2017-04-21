@@ -24,9 +24,12 @@ void draw_pixel(float x,float y,float r,float g,float b) {
 void display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     float x,y;
-    set eye = (set) { .5, .5, -2 };
+    set eye = (set) { .5, .5, -1 };
     triangle *triangles = malloc(sizeof(triangle) * TRI_NUM);
-    triangles[0] = (triangle){(set) { 1, 0, 6 },  (set) { .5, 1, 6 }, (set) { 0, 0, 6 }};
+    triangles[0] = (triangle){(set) { 0, 0, 0 },  (set) { 1, 0, 0 }, (set) { 0, 0, 1 }};
+    triangles[1] = (triangle){(set) { 1, 0, 0 },  (set) { 1, 0, 1 }, (set) { 0, 0, 1 }};
+    light *lights = malloc(sizeof(light) * LIGHT_NUM);
+    lights[0] = (light) { (set) { .5, .5, 1.5 }, .1 };
     for (x = 0; x <= 1; x += .01) {
         for (y = 0; y <= 1; y += .01) {
             set pt = (set) { x, y, 0 };

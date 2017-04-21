@@ -1,1 +1,2 @@
-#define TRI_NUM 1
+#define TRI_NUM 14
+#define LIGHT_NUM 1

@@ -9,3 +9,8 @@ typedef struct triangle {
     set b;
     set c;
 } triangle;
+
+typedef struct light {
+    set center;
+    float r;
+} light;

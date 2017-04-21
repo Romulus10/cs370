@@ -6,16 +6,19 @@ LIBDIR=-L../lib -L/usr/X11R6/lib
 OBJDIR=build/obj/
 CC=gcc
 
+SRC=src/ray_tracer.c src/ops.c src/tracer.c
+BLD=build/ray_tracer
+
 make:
 	mkdir build
-	$(CC) src/ray_tracer.c src/ops.c src/tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o build/ray_tracer
+	$(CC) $(SRC) $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
 
 no_opt:
 	mkdir build
-	$(CC) src/ray_tracer.c src/ops.c src/tracer.c $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o build/ray_tracer
+	$(CC) $(SRC) $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
 
 clean:
 	rm -rf build
 
 run:
-	build/ray_tracer
+	$(BLD)

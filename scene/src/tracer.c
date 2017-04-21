@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <math.h>
 
 #include "types.h"
 #include "ops.h"
@@ -28,13 +29,14 @@ bool ray(set p1, set p2, triangle *triangles) {
     }
 }
 
-int check_light_collision(set p1, set p2, set p3) {
+bool line(set p1, set p2, light l) {
+    float U = (((l.center.x - p1.x)*(p2.x - p1.x)) + ((l.center.y - p1.y)*(p2.y - p1.y)) + ((l.center.z - p1.z)*(p2.z - p1.z))) / pow(mag(pt_sub(p2, p1)), 2);
+    set P = pt_add(p1, scalar_dot(U, pt_sub(p2, p1)));
+    float dist = mag(P);
+    if (dist <= l.r) return true;
+    else return false;
 }
 
-int check_trian_collision(set p1, set p2, triangle i) {
-}
+float get_brightness() {
 
-int get_brightness() {
-	int bright = 0;
-	return bright;
 }

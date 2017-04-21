@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "types.h"
 
 set cross_product(set u, set v) {
@@ -26,4 +28,8 @@ set pt_sub(set a, set b) {
     return (set) { (a.x - b.x),
     		       (a.y - b.y),
     		       (a.z - b.z) };
+}
+
+float mag(set a) {
+    return sqrt(pow(a.x, 2) + pow(a.y, 2) + pow(a.z, 2));
 }
