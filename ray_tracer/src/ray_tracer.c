@@ -1,4 +1,5 @@
 #include <GL/glut.h>
+#include <GL/glew.h>
 
 #include <stdbool.h>
 
