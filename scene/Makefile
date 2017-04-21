@@ -13,6 +13,10 @@ make:
 	mkdir build
 	$(CC) $(SRC) $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
 
+win:
+	mkdir build
+	i686-w64-mingw32-gcc $(SRC) -I/usr/local/share/MinGW/freeglut/include -L/usr/local/share/MinGW/freeglut/lib -lfreeglut -lopengl32 -Wl,--subsystem,windows -o build/ray_tracer.exe
+
 no_opt:
 	mkdir build
 	$(CC) $(SRC) $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
