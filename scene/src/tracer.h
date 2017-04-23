@@ -1,3 +1,2 @@
-bool ray(set p1, set p2, triangle i);
-
-int line(set p1, set p2, light l);
+bool ray(set p1, set p2);
+bool intersect(set p1, set p2, triangle i);

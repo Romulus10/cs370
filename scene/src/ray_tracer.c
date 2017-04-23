@@ -25,21 +25,14 @@ void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	float x,y;
 	set eye = (set) { .5, .5, -1 };
-	triangle *triangles = malloc(sizeof(triangle) * TRI_NUM);
-	triangles[0] = (triangle){(set) { 0, 0, 0 },  (set) { 1, 0, 0 }, (set) { 0, 0, 1 }};
-	triangles[1] = (triangle){(set) { 1, 0, 0 },  (set) { 1, 0, 1 }, (set) { 0, 0, 1 }};
-	light *lights = malloc(sizeof(light) * LIGHT_NUM);
-	lights[0] = (light) { (set) { .5, .5, 1.5 }, .1 };
 	for (x = 0; x <= 5; x += .01) {
 		for (y = 0; y <= 5; y += .01) {
 			int i;
 			set pt = (set) { x, y, 0 };
-			for (i = 0; i < TRI_NUM; i++) {
-				if (ray(pt, eye, triangles[i])) {
-					draw_pixel(x*100, y*100, 1,1,1);
-				} else {
-					draw_pixel(x*100, y*100, 0,0,0);
-				}
+			if (ray(pt, eye)) {
+				draw_pixel(x*100, y*100, 1,1,1);
+			} else {
+				draw_pixel(x*100, y*100, 0,0,0);
 			}
 		}
 	}

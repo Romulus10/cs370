@@ -2,9 +2,9 @@
 
 #include "stack.h"
 
-void push(Node head, char *type, float value) {
+void push(Node head, float value) {
     Node tmp = head;
-    head = (Node) { type, value, tmp };
+    head = (Node) { value, tmp };
 }
 
 Node pop(Node head) {
