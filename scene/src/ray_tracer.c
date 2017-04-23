@@ -30,19 +30,12 @@ void display(void) {
 	triangles[1] = (triangle){(set) { 1, 0, 0 },  (set) { 1, 0, 1 }, (set) { 0, 0, 1 }};
 	light *lights = malloc(sizeof(light) * LIGHT_NUM);
 	lights[0] = (light) { (set) { .5, .5, 1.5 }, .1 };
-	for (x = 0; x <= 1; x += .01) {
-		for (y = 0; y <= 1; y += .01) {
+	for (x = 0; x <= 5; x += .01) {
+		for (y = 0; y <= 5; y += .01) {
 			int i;
 			set pt = (set) { x, y, 0 };
 			for (i = 0; i < TRI_NUM; i++) {
 				if (ray(pt, eye, triangles[i])) {
-					draw_pixel(x*100, y*100, 1,1,1);
-				} else {
-					draw_pixel(x*100, y*100, 0,0,0);
-				}
-			}
-			for (i = 0; i < LIGHT_NUM; i++) {
-				if (line(pt, eye, lights[i])) {
 					draw_pixel(x*100, y*100, 1,1,1);
 				} else {
 					draw_pixel(x*100, y*100, 0,0,0);
