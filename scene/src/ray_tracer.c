@@ -41,7 +41,6 @@ void display(void) {
 					draw_pixel(x*100, y*100, 0,0,0);
 				}
 			}
-			/*
 			for (i = 0; i < LIGHT_NUM; i++) {
 				if (line(pt, eye, lights[i])) {
 					draw_pixel(x*100, y*100, 1,1,1);
@@ -49,7 +48,6 @@ void display(void) {
 					draw_pixel(x*100, y*100, 0,0,0);
 				}
 			}
-			*/
 		}
 	}
 	glFlush();
