@@ -1,10 +1,18 @@
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 
-from ray_tracer.src.rt_types import *
+from ray_tracer.src.tracer import *
 
 
-def draw_pixel(x, y, r, g, b):
+def draw_pixel(x: float, y: float, r: float, g: float, b: float) -> None:
+    """
+    :rtype: None
+    :param x: float, x coordinate
+    :param y: float, y coordinate
+    :param r: float, red color value
+    :param g: float, green color value
+    :param b: float, blue color value
+    """
     sz = .02
     glBegin(GL_TRIANGLES)
     glColor3f(1, 0, 0)
