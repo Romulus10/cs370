@@ -6,7 +6,6 @@ from ray_tracer.src.tracer import *
 
 def draw_pixel(x: float, y: float, r: float, g: float, b: float) -> None:
     """
-    :rtype: None
     :param x: float, x coordinate
     :param y: float, y coordinate
     :param r: float, red color value

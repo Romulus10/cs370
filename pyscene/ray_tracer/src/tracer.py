@@ -4,7 +4,6 @@ from .rt_types import *
 
 def intersect(p1: Set, p2: Set, t: Triangle) -> bool:
     """
-    :rtype: bool
     :param p1: Set
     :param p2: Set
     :param t: Triangle
@@ -33,7 +32,6 @@ def intersect(p1: Set, p2: Set, t: Triangle) -> bool:
 
 def light_intersect(p1: Set, p2: Set, i: Light) -> bool:
     """
-    :rtype: bool
     :param p1: Set
     :param p2: Set
     :param i: Light
@@ -48,23 +46,40 @@ def light_intersect(p1: Set, p2: Set, i: Light) -> bool:
         return False
 
 
-def ray(p1: Set, p2: Set) -> float:
+def ray(p1: Set, p2: Set) -> bool:
     """
     :param p1: Set
     :param p2: Set
-    :return: brightness of lighting influence
-    :rtype: float
+    :return: pixel lit or not?
     """
+    triangles = [
+        Triangle(Set(0, 0, 0), Set(1, 0, 0), Set(0, 0, 1)),
+        Triangle(Set(1, 0, 0), Set(1, 0, 1), Set(0, 0, 1))
+    ]
+    for i in triangles:
+        if intersect(p1, p2, i):
+            return True
+        else:
+            return False
+
+
+def r_ray(p1: Set, p2: Set) -> float:
     bright = 0
     triangles = [
         Triangle(Set(0, 0, 0), Set(1, 0, 0), Set(0, 0, 1)),
         Triangle(Set(1, 0, 0), Set(1, 0, 1), Set(0, 0, 1))
-        ]
+    ]
     lights = [
-        Light(Set(.5, .5, .5), .1)]
-    for i in triangles:
-        if intersect(p1, p2, i):
-            bright = .1
-        return bright
-    else:
-        return 0
+        Light(Set(.5, .5, 1.5), .1)
+    ]
+    # 2 lists of tuples (Object, U)
+    # Check triangle collisions, get U
+    # Check light collisions, get U
+    # find closest U and pop
+    # if it's a light, return 1
+    # if triangle
+    # bright = .1
+    # for each light
+    # if oldRay*N newRay*N have different signs
+    # bright += ray(I to light) / I - light
+    return bright
