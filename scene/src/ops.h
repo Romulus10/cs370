@@ -10,4 +10,8 @@ set pt_sub(set a, set b);
 
 float mag(set a);
 
+bool check_sign_diff(float x, float y);
 
+set get_normal(triangle i);
+
+set get_intersect(set N, triangle i, set p1, set p2);

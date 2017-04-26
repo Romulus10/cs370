@@ -27,7 +27,7 @@ def draw_pixel(x: float, y: float, r: float, g: float, b: float) -> None:
 
 def display():
     glClear(GL_COLOR_BUFFER_BIT)
-    eye = Set(.5, .5, -1)
+    eye = Set(.5, .5, -2)
     for x in [x * 0.01 for x in range(0, 500)]:
         for y in [x * 0.01 for x in range(0, 500)]:
             pt = Set(x, y, 0)

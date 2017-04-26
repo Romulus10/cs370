@@ -29,11 +29,8 @@ void display(void) {
 		for (y = 0; y <= 5; y += .01) {
 			int i;
 			set pt = (set) { x, y, 0 };
-			if (ray(pt, eye)) {
-				draw_pixel(x*100, y*100, 1,1,1);
-			} else {
-				draw_pixel(x*100, y*100, 0,0,0);
-			}
+			float b = ray(pt, eye);
+			draw_pixel(x*100, y*100, b,b,b);
 		}
 	}
 	glFlush();
