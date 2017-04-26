@@ -85,6 +85,17 @@ class TestOps(unittest.TestCase):
         x = scalar_dot(4, self.set1)
         self.assertTrue(x.x == 4 and x.y == 4 and x.z == 4)
 
+    def test_get_max(self):
+        l = [
+            ("a", 2),
+            ("b", 4),
+            ("c", 6),
+            ("d", 8),
+            ("e", 10),
+            ("f", 1)
+        ]
+        self.assertEqual(get_max(l)[1], 10)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -53,3 +53,18 @@ def mag(a: Set) -> float:
     :return: The magnitude of the vector a
     """
     return math.sqrt(math.pow(a.x, 2) + math.pow(a.y, 2) + math.pow(a.z, 2))
+
+
+def get_max(l: list) -> tuple:
+    """
+    :param l: list of tuples, (object, float)
+    :return: The highest u float value in the list of tuples.
+    """
+    min_el = (None, 0)
+    for x in l:
+        if x[1] > min_el[1]:
+            min_el = x
+            l.remove(x)
+        if x[1] == 0:
+            l.remove(x)
+    return min_el

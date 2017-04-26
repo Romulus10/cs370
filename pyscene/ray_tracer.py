@@ -35,6 +35,8 @@ def display():
                 draw_pixel(x * 100, y * 100, 1, 1, 1)
             else:
                 draw_pixel(x * 100, y * 100, 0, 0, 0)
+            # bright = r_ray(pt, eye)
+            # draw_pixel(x * 100, y * 100, bright, bright, bright)
     glFlush()
 
 
