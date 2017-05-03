@@ -40,21 +40,21 @@ float ray(set p1, set p2) {
 	light *lights = get_lights();
 	int sw = 0;
 	float bright = 0;
-	float max = 0;
+	float min = 0xffffffff;
 	int i;
 	triangle t;
 	light l;
 	for (i = 0; i < TRI_NUM; i++) {
 		float u = intersect(p1, p2, triangles[i]);
-		if (u > max) {
-			max = u;
+		if (u < min && u != 0) {
+			min = u;
 			t = triangles[i];
 		}
 	}
 	for (i = 0; i < LIGHT_NUM; i++) {
 		float u = light_intersect(p1, p2, lights[i]);
-		if (u > max) {
-			max = u;
+		if (u < min && u != 0) {
+			min = u;
 			l = lights[i];
 			if (!sw) sw = 1;
 		}
