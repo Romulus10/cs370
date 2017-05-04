@@ -22,3 +22,7 @@ clean:
 
 run:
 	$(BLD)
+
+val:
+	valgrind --track-origins=yes --leak-check=full -v $(BLD)
+

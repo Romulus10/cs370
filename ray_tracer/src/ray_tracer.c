@@ -5,7 +5,7 @@
 #include "types.h"
 #include "ops.h"
 
-#define TRI_NUM 1
+#define TRI_NUM 14
 
 void draw_pixel(float x,float y,float r,float g,float b) {
     #define SZ  .02
@@ -21,9 +21,52 @@ void draw_pixel(float x,float y,float r,float g,float b) {
     glEnd();
 }
 
-bool ray(set p1, set p2, triangle *triangles) {
+bool ray(set p1, set p2) {
     int j;
-    for (j = 0; j < TRI_NUM; j++) {
+    float x = .2;
+	float y = .15;
+	float z = .6;
+	float length = .1;
+    triangle *triangles = malloc(sizeof(triangle) * TRI_NUM);
+    triangles[0] = (triangle){(set) { 0, 0, 0 },  (set) { 1, 0, 0 }, (set) { 0, 0, 1 }};
+    triangles[1] = (triangle){(set) { 1, 0, 0 },  (set) { 1, 0, 1 }, (set) { 0, 0, 1 }};
+	triangles[2] = ((triangle) {(set) {x-length,y-length,z-length},
+			(set) {x-length,y-length,z+length},
+			(set) {x-length,y+length,z+length}});
+	triangles[3] = ((triangle) {(set) {x+length,y+length,z-length},
+			(set) {x-length,y-length,z-length},
+			(set) {x-length,y+length,z-length}});
+	triangles[4] = ((triangle) {(set) {x+length,y-length,z+length},
+			(set) {x-length,y-length,z-length},
+			(set) {x+length,y-length,z-length}});
+	triangles[5] = ((triangle) {(set) {x+length,y+length,z-length},
+			(set) {x+length,y-length,z-length},
+			(set) {x-length,y-length,z-length}});
+	triangles[6] = ((triangle) {(set) {x-length,z-length,z-length},
+			(set) {x-length,y+length,z+length},
+			(set) {x-length,y+length,z-length}});
+	triangles[7] = ((triangle) {(set) {x+length,y-length,z+length},
+			(set) {x-length,y-length,z+length},
+			(set) {x-length,y-length,z-length}});
+	triangles[8] = ((triangle) {(set) {x-length,y+length,z+length},
+			(set) {x-length,y-length,z+length},
+			(set) {x+length,y-length,z+length}});
+	triangles[9] = ((triangle) {(set) {x+length,y+length,z+length},
+			(set) {x+length,-length,z-length},
+			(set) {x+length,+length,z-length}});
+	triangles[10] = ((triangle) {(set) {x+length,y-length,z-length},
+			(set) {x+length,y+length,z+length},
+			(set) {x+length,y-length,z+length}});
+	triangles[11] = ((triangle) {(set) {x+length,y+length,z+length},
+			(set) {x+length,y+length,z-length},
+			(set) {x-length,y+length,z-length}});
+	triangles[12] = ((triangle) {(set) {x+length,y+length,z+length},
+			(set) {x-length,y+length,z-length},
+			(set) {x-length,y+length,z+length}});
+	triangles[13] = ((triangle) {(set) {x+length,y+length,z+length},
+			(set) {x-length,y+length,z+length},
+			(set) {x+length,y-length,z+length}});
+    for (j = 0; j <= TRI_NUM; j++) {
         triangle i = triangles[j];
         set N = cross_product(pt_sub(i.b, i.a), pt_sub(i.c, i.a));
         set r = pt_sub(i.a, p2);
@@ -40,7 +83,9 @@ bool ray(set p1, set p2, triangle *triangles) {
         if ((d.x >= 0) && (d.y >= 0) && (d.z >= 0)) {
             return true;
         } else {
-            return false;
+            if (j == TRI_NUM) {
+                return false;
+            }
         }
     }
 }
@@ -49,12 +94,10 @@ void display(void) {
     glClear(GL_COLOR_BUFFER_BIT);
     float x,y;
     set eye = (set) { .5, .5, -2 };
-    triangle *triangles = malloc(sizeof(triangle) * TRI_NUM);
-    triangles[0] = (triangle){(set) { 1, 0, 6 },  (set) { .5, 1, 6 }, (set) { 0, 0, 6 }};
     for (x = 0; x <= 1; x += .01) {
         for (y = 0; y <= 1; y += .01) {
             set pt = (set) { x, y, 0 };
-            if (ray(pt, eye, triangles)) {
+            if (ray(pt, eye)) {
                 draw_pixel(x*100, y*100, 1,1,1);
             } else {
                 draw_pixel(x*100, y*100, 0,0,0);

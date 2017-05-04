@@ -66,8 +66,8 @@ float ray(set p1, set p2) {
 	else {
 		bright = .1;
 		for (i = 0; i < LIGHT_NUM; i++) {
-			set N = get_normal(triangles[i]);
-			set I = get_intersect(N, triangles[i], p1, p2);
+			set N = get_normal(t);
+			set I = get_intersect(N, t, p1, p2);
 			if (check_sign_diff((dot_product(pt_sub(p2, p1), N)), (dot_product(pt_sub(I, lights[i].center), N)))) {
 				bright += (ray(lights[i].center, I) / mag(pt_sub(I, lights[i].center)));
 			}
