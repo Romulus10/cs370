@@ -6,6 +6,7 @@
 #include "ops.h"
 #include "tracer.h"
 #include "macros.h"
+#include "objects.h"
 
 void draw_pixel(float x,float y,float r,float g,float b) {
 #define SZ  .004
@@ -24,15 +25,19 @@ void draw_pixel(float x,float y,float r,float g,float b) {
 void display(void) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	float x,y;
+	triangle *triangles = get_triangles();
+	light *lights = get_lights();
 	set eye = (set) { .5, .5, -1 };
 	for (x = 0; x <= 1; x += .002) {
 		for (y = 0; y <= 1; y += .002) {
 			int i;
 			set pt = (set) { x, y, 0 };
-			float b = ray(pt, eye);
+			float b = ray(pt, eye, triangles, lights);
 			draw_pixel(x*500, y*500, b,b,b);
 		}
 	}
+	free(triangles);
+	free(lights);
 	glFlush();
 }
 

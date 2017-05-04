@@ -5,7 +5,6 @@
 #include "types.h"
 #include "ops.h"
 #include "macros.h"
-#include "objects.h"
 
 float intersect(set p1, set p2, triangle i) {
 	set N = get_normal(i);
@@ -38,9 +37,7 @@ float light_intersect(set p1, set p2, light i) {
 	}
 }
 
-float ray(set p1, set p2) {
-	triangle *triangles = get_triangles();
-	light *lights = get_lights();
+float ray(set p1, set p2, triangle *triangles, light *lights) {
 	int sw = 0;
 	float bright = 0;
 	float min = 0xffffffff;
@@ -69,10 +66,9 @@ float ray(set p1, set p2) {
 			set N = get_normal(t);
 			set I = get_intersect(N, t, p1, p2);
 			if (check_sign_diff((dot_product(pt_sub(p2, p1), N)), (dot_product(pt_sub(I, lights[i].center), N)))) {
-				bright += (ray(lights[i].center, I) / mag(pt_sub(I, lights[i].center)));
+				bright += (ray(lights[i].center, I, triangles, lights) / mag(pt_sub(I, lights[i].center)));
 			}
 		}
 	}
-	free(triangles); free(lights);
 	return bright;
 }
