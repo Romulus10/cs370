@@ -26,7 +26,10 @@ float intersect(set p1, set p2, triangle i) {
 }
 
 float light_intersect(set p1, set p2, light i) {
-	float U = ((i.center.x - p1.x)*(p2.x - p1.x) + (i.center.y - p1.y)*(p2.y - p1.y) + (i.center.z - p1.z)*(p2.z - p1.z)) / pow(mag(pt_sub(p2,p1)), 2);
+	float U = ((i.center.x - p1.x)*(p2.x - p1.x) + \
+			(i.center.y - p1.y)*(p2.y - p1.y) + \
+			(i.center.z - p1.z)*(p2.z - p1.z)) / \
+		  pow(mag(pt_sub(p2,p1)), 2);
 	set P = pt_add(p1, scalar_dot(U, pt_sub(p2, p1)));
 	if (mag(pt_sub(P, i.center)) <= i.r) {
 		return U;
