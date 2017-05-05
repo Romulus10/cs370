@@ -14,7 +14,7 @@ triangle *get_triangles() {
 			(set) {0, 0, 1}});
 	triangles[1] = ((triangle) {(set) {1, 0, 0},
 			(set) {1, 0, 1},
-			(set) {0, 0, 1}});
+			(set) {0, 0, 1}});	
 	triangles[2] = ((triangle) {(set) {x-length,y-length,z-length},
 			(set) {x-length,y-length,z+length},
 			(set) {x-length,y+length,z+length}});

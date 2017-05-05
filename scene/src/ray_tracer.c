@@ -30,7 +30,6 @@ void display(void) {
 	set eye = (set) { .5, .5, -1 };
 	for (x = 0; x <= 1; x += .002) {
 		for (y = 0; y <= 1; y += .002) {
-			int i;
 			set pt = (set) { x, y, 0 };
 			float b = ray(pt, eye, triangles, lights);
 			draw_pixel(x*500, y*500, b,b,b);
