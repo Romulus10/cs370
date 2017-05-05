@@ -1,0 +1,12 @@
+Script started on Fri 05 May 2017 09:55:46 AM EDT
+sean@sean-VirtualBox ~/Documents/cs370/scene $
+sean@sean-VirtualBox ~/Documents/cs370/scene $ make no_opt
+mkdir build
+gcc src/ray_tracer.c src/ops.c src/tracer.c src/objects.c -D_LINUX -g -I../include -L../lib -L/usr/X11R6/lib -lm -lGL -lglut -lGLU -o build/ray_tracer
+sean@sean-VirtualBox ~/Documents/cs370/scene $ make run
+build/ray_tracer
+sean@sean-VirtualBox ~/Documents/cs370/scene $
+sean@sean-VirtualBox ~/Documents/cs370/scene $ exit
+exit
+
+Script done on Fri 05 May 2017 09:56:03 AM EDT
