@@ -38,7 +38,7 @@ float light_intersect(set p1, set p2, light i) {
 }
 
 float ray(set p1, set p2, triangle *triangles, light *lights) {
-	int sw = 0;
+    int sw = 0;
 	float bright = 0;
 	float min = 0xffffffff;
 	int i;
@@ -59,14 +59,17 @@ float ray(set p1, set p2, triangle *triangles, light *lights) {
 			if (!sw) sw = 1;
 		}
 	}
-	if (sw) bright = 1;
+	if (sw) {
+        bright = 1;
+	}
 	else {
 		bright = .1;
 		for (i = 0; i < LIGHT_NUM; i++) {
 			set N = get_normal(t);
 			set I = get_intersect(N, t, p1, p2);
 			if (check_sign_diff((dot_product(pt_sub(p2, p1), N)), (dot_product(pt_sub(I, lights[i].center), N)))) {
-				bright += (ray(lights[i].center, I, triangles, lights) / mag(pt_sub(I, lights[i].center)));
+                bright += (ray(lights[i].center, I, triangles, lights) / mag(pt_sub(I, lights[i].center)));
+                //bright += (1 / mag(pt_sub(I, lights[i].center)));
 			}
 		}
 	}
