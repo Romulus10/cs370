@@ -45,5 +45,5 @@ set get_intersect(set N, triangle i, set p1, set p2) {
 }
 
 bool check_sign_diff(float x, float y) {
-	return (!(x > 0) != !(y > 0));
+	return (!((x >= 0)) ^ (y < 0));
 }

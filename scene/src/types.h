@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 typedef struct set {
 	float x;
 	float y;
@@ -14,3 +16,8 @@ typedef struct light {
 	set center;
 	float r;
 } light;
+
+typedef struct inter {
+    float u;
+    bool lit;
+} inter;
