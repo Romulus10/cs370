@@ -10,3 +10,12 @@ clean:
 	rm tracer
 run:
 	./tracer
+cleanup:
+	clang-format ray_tracer.c > tmp.txt
+	cat tmp.txt > ray_tracer.c
+	rm tmp.txt
+all:
+	make cleanup
+	make clean
+	make asgn5
+	make run
