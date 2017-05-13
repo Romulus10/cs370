@@ -222,7 +222,7 @@ light_data lights = {
 };
 
 void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
-	*(ptr) = ((struct triangle){
+	*(ptr) = ((triangle){
 			.t1={plane, v1.a, v1.b},
 			.t2={plane, v2.a, v2.b},
 			.t3={plane, v3.a, v3.b}
@@ -230,7 +230,7 @@ void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
 }
 
 void build_triangley(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
-	*(ptr) = ((struct triangle){
+	*(ptr) = ((triangle){
 			.t1={v1.a, plane, v1.b},
 			.t2={v2.a, plane, v2.b},
 			.t3={v3.a, plane, v3.b}
@@ -238,7 +238,7 @@ void build_triangley(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
 }
 
 void build_trianglez(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
-	*(ptr) = (struct triangle) {
+	*(ptr) = (triangle) {
 		.t1={v1.a, v1.b, plane},
 			.t2={v2.a, v2.b, plane},
 			.t3={v3.a, v3.b, plane}
@@ -252,15 +252,15 @@ void build_squarez(set_3 center, float offset, triangle *ptr, int dir) {
 	else centerOff = center.z + offset;
 
 	build_trianglez(
-			((struct set_2) {.a=center.x-offset, .b=center.y+offset}),
-			((struct set_2) {.a=center.x+offset, .b=center.y+offset}),
-			((struct set_2) {.a=center.x-offset, .b=center.y-offset}),
+			((set_2) {.a=center.x-offset, .b=center.y+offset}),
+			((set_2) {.a=center.x+offset, .b=center.y+offset}),
+			((set_2) {.a=center.x-offset, .b=center.y-offset}),
 			centerOff, ptr);
 
 	build_trianglez(
-			((struct set_2) {.a=center.x+offset, .b=center.y+offset}),
-			((struct set_2) {.a=center.x+offset, .b=center.y-offset}),
-			((struct set_2) {.a=center.x-offset, .b=center.y-offset}),
+			((set_2) {.a=center.x+offset, .b=center.y+offset}),
+			((set_2) {.a=center.x+offset, .b=center.y-offset}),
+			((set_2) {.a=center.x-offset, .b=center.y-offset}),
 			centerOff, ptr+1);
 }
 
@@ -271,15 +271,15 @@ void build_squarey(set_3 center, float offset, triangle *ptr, int dir) {
 	else centerOff = center.y + offset;
 
 	build_triangley(
-			((struct set_2) {.a=center.x-offset, .b=center.z+offset}),
-			((struct set_2) {.a=center.x+offset, .b=center.z+offset}),
-			((struct set_2) {.a=center.x-offset, .b=center.z-offset}),
+			((set_2) {.a=center.x-offset, .b=center.z+offset}),
+			((set_2) {.a=center.x+offset, .b=center.z+offset}),
+			((set_2) {.a=center.x-offset, .b=center.z-offset}),
 			centerOff, ptr);
 
 	build_triangley(
-			((struct set_2) {.a=center.x+offset, .b=center.z+offset}),
-			((struct set_2) {.a=center.x+offset, .b=center.z-offset}),
-			((struct set_2) {.a=center.x-offset, .b=center.z-offset}),
+			((set_2) {.a=center.x+offset, .b=center.z+offset}),
+			((set_2) {.a=center.x+offset, .b=center.z-offset}),
+			((set_2) {.a=center.x-offset, .b=center.z-offset}),
 			centerOff, ptr+1);
 }
 
@@ -290,15 +290,15 @@ void build_squarex(set_3 center, float offset, triangle *ptr, int dir) {
 	else centerOff = center.x + offset;
 
 	build_trianglex(
-			((struct set_2) {.a=center.y-offset, .b=center.z+offset}),
-			((struct set_2) {.a=center.y+offset, .b=center.z+offset}),
-			((struct set_2) {.a=center.y-offset, .b=center.z-offset}),
+			((set_2) {.a=center.y-offset, .b=center.z+offset}),
+			((set_2) {.a=center.y+offset, .b=center.z+offset}),
+			((set_2) {.a=center.y-offset, .b=center.z-offset}),
 			centerOff, ptr);
 
 	build_trianglex(
-			((struct set_2) {.a=center.y+offset, .b=center.z+offset}),
-			((struct set_2) {.a=center.y+offset, .b=center.z-offset}),
-			((struct set_2) {.a=center.y-offset, .b=center.z-offset}),
+			((set_2) {.a=center.y+offset, .b=center.z+offset}),
+			((set_2) {.a=center.y+offset, .b=center.z-offset}),
+			((set_2) {.a=center.y-offset, .b=center.z-offset}),
 			centerOff, ptr+1);
 }
 
@@ -397,9 +397,9 @@ float ray(set_3 screen, set_3 eye) {
 }
 
 void init_mod() {
-	build_squarey(((struct set_3){.x=0.5, .y=0.0, .z=0.5}), 0.5, triangles.triangle_data, 0);
-	build_cube(((struct set_3 ){.x=0.2, .y=0.15, .z=0.6}), 0.1, triangles.triangle_data+2);
-	lights.light_data[0] = (struct set_3){.x=0.5, .y=0.5, .z=1.5};
+	build_squarey(((set_3){.x=0.5, .y=0.0, .z=0.5}), 0.5, triangles.triangle_data, 0);
+	build_cube(((set_3 ){.x=0.2, .y=0.15, .z=0.6}), 0.1, triangles.triangle_data+2);
+	lights.light_data[0] = (set_3){.x=0.5, .y=0.5, .z=1.5};
 }
 
 void drawpixel(float x,float y,float r,float g,float b) {
