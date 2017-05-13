@@ -1,5 +1,5 @@
-FLAGS=-D_LINUX -ffast-math -funroll-loops -O3 -g
-FLAGS_NO=-D_LINUX -g
+FLAGS=-D_LINUX -ffast-math -funroll-loops -O3 -g -Wall -Werror
+FLAGS_NO=-D_LINUX -g -Wall -Werror
 LIBS=-lm -lGL -lglut -lGLU
 INCDIR=-I../include
 LIBDIR=-L../lib -L/usr/X11R6/lib

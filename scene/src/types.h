@@ -17,7 +17,3 @@ typedef struct light {
 	float r;
 } light;
 
-typedef struct inter {
-    float u;
-    bool lit;
-} inter;
