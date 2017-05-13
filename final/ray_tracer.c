@@ -190,7 +190,7 @@ typedef struct triangle {
   set_3 t1;
   set_3 t2;
   set_3 t3;
-} tTriangle;
+} triangle;
 
 typedef struct {
   float u;
@@ -199,11 +199,11 @@ typedef struct {
   bool lit;
   int type;
   int ind;
-} tIntersect;
+} inter;
 
 typedef struct {
-  tTriangle triangle_arr[1024];
-  tTriangle *triangle_data;
+  triangle triangle_arr[1024];
+  triangle *triangle_data;
   int len;
 } asgn5_data;
 
@@ -223,34 +223,31 @@ light_data lights = {
   .len = 0
 };
 
-void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, tTriangle *ptr) {
+void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
     *(ptr) = ((struct triangle){
           .t1={plane, v1.a, v1.b},
           .t2={plane, v2.a, v2.b},
           .t3={plane, v3.a, v3.b}
         });
-
 }
 
-void build_triangley(set_2 v1, set_2 v2, set_2 v3, float plane, tTriangle *ptr) {
+void build_triangley(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
     *(ptr) = ((struct triangle){
       .t1={v1.a, plane, v1.b},
       .t2={v2.a, plane, v2.b},
       .t3={v3.a, plane, v3.b}
     });
-
 }
 
-void build_trianglez(set_2 v1, set_2 v2, set_2 v3, float plane, tTriangle *ptr) {
+void build_trianglez(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
     *(ptr) = (struct triangle) {
       .t1={v1.a, v1.b, plane},
       .t2={v2.a, v2.b, plane},
       .t3={v3.a, v3.b, plane}
     };
-
 }
 
-void build_squarez(set_3 center, float offset, tTriangle *ptr, int dir) {
+void build_squarez(set_3 center, float offset, triangle *ptr, int dir) {
     float centerOff;
     if(dir == 0) centerOff = center.z;
     else if (dir < 0) centerOff = center.z - offset;
@@ -269,7 +266,7 @@ void build_squarez(set_3 center, float offset, tTriangle *ptr, int dir) {
         centerOff, ptr+1);
 }
 
-void build_squarey(set_3 center, float offset, tTriangle *ptr, int dir) {
+void build_squarey(set_3 center, float offset, triangle *ptr, int dir) {
     float centerOff;
     if(dir == 0) centerOff = center.y;
     else if (dir < 0) centerOff = center.y - offset;
@@ -289,7 +286,7 @@ void build_squarey(set_3 center, float offset, tTriangle *ptr, int dir) {
 
 }
 
-void build_squarex(set_3 center, float offset, tTriangle *ptr, int dir) {
+void build_squarex(set_3 center, float offset, triangle *ptr, int dir) {
     float centerOff;
     if(dir == 0) centerOff = center.x;
     else if (dir < 0) centerOff = center.x - offset;
@@ -308,7 +305,7 @@ void build_squarex(set_3 center, float offset, tTriangle *ptr, int dir) {
         centerOff, ptr+1);
 }
 
-void build_cube(set_3 center, float offset, tTriangle *ptr) {
+void build_cube(set_3 center, float offset, triangle *ptr) {
   build_squarex(center,offset, ptr, -1);
   build_squarex(center,offset, ptr+2, +1);
 
@@ -319,9 +316,8 @@ void build_cube(set_3 center, float offset, tTriangle *ptr) {
   build_squarez(center,offset,ptr+10, +1);
 }
 
-tIntersect query_intersection(set_3 screen, set_3 eye, int triangle) {
-
-  tIntersect result = { 0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0, 0};
+inter query_intersection(set_3 screen, set_3 eye, int triangle) {
+  inter result = { 0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0, 0};
 
  set_3 t1 = triangles.triangle_data[triangle].t1,
          t2 = triangles.triangle_data[triangle].t2,
@@ -348,27 +344,20 @@ tIntersect query_intersection(set_3 screen, set_3 eye, int triangle) {
   return result;
 }
 
-tIntersect query_lightray(set_3 screen, set_3 eye, set_3 center, float radius) {
-  tIntersect result = { 0.0, false };
-
+inter query_lightray(set_3 screen, set_3 eye, set_3 center, float radius) {
+  inter result = { 0.0, false };
   float u; VECTOR_U_SPHERE(u, eye, screen, center);
-
   set_3 p; VECTOR_DIST_SPHERE(p,eye,screen,u);
-
   set_3 sub; VECTOR_SUBTRACT(sub, p, center);
-
   float sub_mag; VECTOR_MAG(sub_mag, sub);
-
   result.u = u;
   result.lit = sub_mag <= radius;
   return result;
 }
 
 float ray(set_3 screen, set_3 eye) {
-
   float bright = 0.0;
-
-  tIntersect result, closest_u;
+  inter result, closest_u;
   closest_u.u = INFINITY;
 
   for (int i = 0; i < triangles.len; i++) {
@@ -411,7 +400,6 @@ float ray(set_3 screen, set_3 eye) {
 }
 
 void init_mod() {
-
   build_squarey(((struct set_3){.x=0.5, .y=0.0, .z=0.5}), 0.5, triangles.triangle_data, 0);
   build_cube(((struct set_3 ){.x=0.2, .y=0.15, .z=0.6}), 0.1, triangles.triangle_data+2);
 

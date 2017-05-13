@@ -5,8 +5,8 @@ LIBDIR=-L../lib -L/usr/X11R6/lib
 CC=gcc
 
 asgn5: ray_tracer.c
-	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o asgn5
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o tracer
 clean:
-	rm asgn5
+	rm tracer
 run:
-	./asgn5
+	./tracer
