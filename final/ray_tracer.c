@@ -7,46 +7,50 @@
 
 #define DEBUG 0
 #define GL_TEST 0
+#define LIGHT -1.0
+#define TRIANGLE 1.0
+#define INC 0.001
+#define SZ  0.002
 
 #define BUILD_SQUAREZ(center, offset, ptr) ({                    \
     BUILD_TRIANGLEZ(                                              \
-        ((struct tuple2d) {.x=(center.x-offset), .y=(center.y+offset)}),   \
-        ((struct tuple2d) {.x=center.x+offset, .y=center.y-offset}),   \
-        ((struct tuple2d) {.x=center.x-offset, .y=center.y-offset}),   \
+        ((struct set_2) {.x=(center.x-offset), .y=(center.y+offset)}),   \
+        ((struct set_2) {.x=center.x+offset, .y=center.y-offset}),   \
+        ((struct set_2) {.x=center.x-offset, .y=center.y-offset}),   \
         center.z-offset,ptr);                                         \
                                                                   \
     BUILD_TRIANGLEZ(                                              \
-        ((struct tuple2d) {.x=center.x-offset, .y=center.y+offset}),   \
-        ((struct tuple2d) {.x=center.x+offset, .y=center.y-offset}),   \
-        ((struct tuple2d) {.x=center.x-offset, .y=center.y-offset}),   \
+        ((struct set_2) {.x=center.x-offset, .y=center.y+offset}),   \
+        ((struct set_2) {.x=center.x+offset, .y=center.y-offset}),   \
+        ((struct set_2) {.x=center.x-offset, .y=center.y-offset}),   \
         center.z+offset,ptr+1);                                         \
     })
 
 #define BUILD_SQUAREY(center, offset, ptr) ({                  \
     BUILD_TRIANGLEY(                                              \
-        ((struct tuple2d) {.x=center.x-offset, .z=center.z+offset}),   \
-        ((struct tuple2d) {.x=center.x+offset, .z=center.z-offset}),   \
-        ((struct tuple2d) {.x=center.x-offset, .z=center.z-offset}),   \
+        ((struct set_2) {.x=center.x-offset, .z=center.z+offset}),   \
+        ((struct set_2) {.x=center.x+offset, .z=center.z-offset}),   \
+        ((struct set_2) {.x=center.x-offset, .z=center.z-offset}),   \
         center.y-offset, ptr);                                         \
                                                                   \
     BUILD_TRIANGLEY(                                              \
-        ((struct tuple2d) {.x=center.x-offset, .z=center.z+offset}),   \
-        ((struct tuple2d) {.x=center.x+offset, .z=center.z-offset}),   \
-        ((struct tuple2d) {.x=center.x-offset, .z=center.z-offset}),   \
+        ((struct set_2) {.x=center.x-offset, .z=center.z+offset}),   \
+        ((struct set_2) {.x=center.x+offset, .z=center.z-offset}),   \
+        ((struct set_2) {.x=center.x-offset, .z=center.z-offset}),   \
         center.y+offset, ptr+1);                                         \
     })
 
 #define BUILD_SQUAREX(center, offset, ptr) ({                     \
      BUILD_TRIANGLEX(                                             \
-        ((struct tuple2d) {.y=center.y-offset, .z=center.z+offset}),       \
-        ((struct tuple2d) {.y=center.y+offset, .z=center.z-offset}),       \
-        ((struct tuple2d) {.y=center.y-offset, .z=center.z-offset}),       \
+        ((struct set_2) {.y=center.y-offset, .z=center.z+offset}),       \
+        ((struct set_2) {.y=center.y+offset, .z=center.z-offset}),       \
+        ((struct set_2) {.y=center.y-offset, .z=center.z-offset}),       \
         center.x-offset, ptr);                                         \
                                                                   \
     BUILD_TRIANGLEX(                                              \
-        ((struct tuple2d) {.y=center.y-offset, .z=center.z+offset}),       \
-        ((struct tuple2d) {.y=center.y+offset, .z=center.z-offset}),       \
-        ((struct tuple2d) {.y=center.y-offset, .z=center.z-offset}),       \
+        ((struct set_2) {.y=center.y-offset, .z=center.z+offset}),       \
+        ((struct set_2) {.y=center.y+offset, .z=center.z-offset}),       \
+        ((struct set_2) {.y=center.y-offset, .z=center.z-offset}),       \
         center.x+offset, ptr+1);                                         \
     })
 
@@ -58,10 +62,10 @@
     float _u;                                      \
     VECTOR_U_SPHERE(_u, P1, P2, P3);               \
                                                    \
-    tTuplef _p;                                    \
+    set_3 _p;                                    \
     VECTOR_DIST_SPHERE(_p, P1, P2, _u);            \
                                                    \
-    tTuplef _sub;                                  \
+    set_3 _sub;                                  \
     VECTOR_SUBTRACT(_sub, _p, P3);                 \
                                                    \
     float _sub_mag;                                \
@@ -71,10 +75,10 @@
     })
 
 #define VECTOR_DIST_SPHERE(R, P1, P2, U) ({   \
-    tTuplef sr1;                              \
+    set_3 sr1;                              \
     VECTOR_SUBTRACT(sr1, P2, P1);             \
                                               \
-    tTuplef mr1;                              \
+    set_3 mr1;                              \
     VECTOR_MULTIPLY_S(mr1, sr1, U);           \
     VECTOR_ADD(R, P1, mr1);                   \
     });
@@ -85,7 +89,7 @@
       ((P3.y-P1.y)*(P2.y-P1.y))   +           \
       ((P3.z-P1.z)*(P2.z-P1.z));              \
                                               \
-    tTuplef bot_v_sub;                        \
+    set_3 bot_v_sub;                        \
     VECTOR_SUBTRACT(bot_v_sub, P2, P1);       \
                                               \
     float bot_result;                         \
@@ -119,7 +123,7 @@
 })                                                \
 
 #define VECTOR_INTERSECT(R, P1, P2, U) ({ \
-  tTuplef arg1, arg2;                     \
+  set_3 arg1, arg2;                     \
   VECTOR_SUBTRACT(arg1, P2, P1);          \
   VECTOR_MULTIPLY_S(arg2, arg1, U);       \
   VECTOR_ADD(R, P1, arg2);                \
@@ -127,7 +131,7 @@
 
 #define VECTOR_U(P, N, T, P1, P2) ({      \
   float arg1=0, arg2=0;                   \
-  tTuplef TminusP1 = {0,0,0},             \
+  set_3 TminusP1 = {0,0,0},             \
           P2minusP1= {0,0,0};             \
   VECTOR_SUBTRACT(TminusP1, T, P1);       \
   VECTOR_SUBTRACT(P2minusP1, P2, P1);     \
@@ -137,7 +141,7 @@
 })                                        \
 
 #define VECTOR_NORMAL(R, T1, T2, T3) ({     \
-  tTuplef arg1={0,0,0}, arg2={0,0,0};       \
+  set_3 arg1={0,0,0}, arg2={0,0,0};       \
   VECTOR_SUBTRACT(arg1, T2, T1);            \
   VECTOR_SUBTRACT(arg2, T3, T1);            \
   VECTOR_CROSS(R, arg1, arg2);              \
@@ -171,27 +175,27 @@
   R.z = V1.z - V2.z;                        \
 })                                          \
 
-typedef struct tuple {
+typedef struct set_3 {
   float x;
   float y;
   float z;
-} tTuplef;
+} set_3;
 
-typedef struct tuple2d {
+typedef struct set_2 {
   float a;
   float b;
-} tTuple2df;
+} set_2;
 
 typedef struct triangle {
-  tTuplef t1;
-  tTuplef t2;
-  tTuplef t3;
+  set_3 t1;
+  set_3 t2;
+  set_3 t3;
 } tTriangle;
 
 typedef struct {
   float u;
-  tTuplef normal;
-  tTuplef I;
+  set_3 normal;
+  set_3 I;
   bool lit;
   int type;
   int ind;
@@ -204,8 +208,8 @@ typedef struct {
 } asgn5_data;
 
 typedef struct {
-  tTuplef light_arr[1024];
-  tTuplef *light_data;
+  set_3 light_arr[1024];
+  set_3 *light_data;
   int len;
 } light_data;
 
@@ -219,8 +223,7 @@ light_data lights = {
   .len = 0
 };
 
-void build_trianglex(tTuple2df v1, tTuple2df v2, tTuple2df v3, float plane, tTriangle *ptr)
-{
+void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, tTriangle *ptr) {
     *(ptr) = ((struct triangle){
           .t1={plane, v1.a, v1.b},
           .t2={plane, v2.a, v2.b},
@@ -229,8 +232,7 @@ void build_trianglex(tTuple2df v1, tTuple2df v2, tTuple2df v3, float plane, tTri
 
 }
 
-void build_triangley(tTuple2df v1, tTuple2df v2, tTuple2df v3, float plane, tTriangle *ptr)
-{
+void build_triangley(set_2 v1, set_2 v2, set_2 v3, float plane, tTriangle *ptr) {
     *(ptr) = ((struct triangle){
       .t1={v1.a, plane, v1.b},
       .t2={v2.a, plane, v2.b},
@@ -239,8 +241,7 @@ void build_triangley(tTuple2df v1, tTuple2df v2, tTuple2df v3, float plane, tTri
 
 }
 
-void build_trianglez(tTuple2df v1, tTuple2df v2, tTuple2df v3, float plane, tTriangle *ptr)
-{
+void build_trianglez(set_2 v1, set_2 v2, set_2 v3, float plane, tTriangle *ptr) {
     *(ptr) = (struct triangle) {
       .t1={v1.a, v1.b, plane},
       .t2={v2.a, v2.b, plane},
@@ -249,69 +250,65 @@ void build_trianglez(tTuple2df v1, tTuple2df v2, tTuple2df v3, float plane, tTri
 
 }
 
-void build_squarez(tTuplef center, float offset, tTriangle *ptr, int dir)
-{
+void build_squarez(set_3 center, float offset, tTriangle *ptr, int dir) {
     float centerOff;
     if(dir == 0) centerOff = center.z;
     else if (dir < 0) centerOff = center.z - offset;
     else centerOff = center.z + offset;
 
     build_trianglez(
-        ((struct tuple2d) {.a=center.x-offset, .b=center.y+offset}),
-        ((struct tuple2d) {.a=center.x+offset, .b=center.y+offset}),
-        ((struct tuple2d) {.a=center.x-offset, .b=center.y-offset}),
+        ((struct set_2) {.a=center.x-offset, .b=center.y+offset}),
+        ((struct set_2) {.a=center.x+offset, .b=center.y+offset}),
+        ((struct set_2) {.a=center.x-offset, .b=center.y-offset}),
         centerOff, ptr);
 
     build_trianglez(
-        ((struct tuple2d) {.a=center.x+offset, .b=center.y+offset}),
-        ((struct tuple2d) {.a=center.x+offset, .b=center.y-offset}),
-        ((struct tuple2d) {.a=center.x-offset, .b=center.y-offset}),
+        ((struct set_2) {.a=center.x+offset, .b=center.y+offset}),
+        ((struct set_2) {.a=center.x+offset, .b=center.y-offset}),
+        ((struct set_2) {.a=center.x-offset, .b=center.y-offset}),
         centerOff, ptr+1);
 }
 
-void build_squarey(tTuplef center, float offset, tTriangle *ptr, int dir)
-{
+void build_squarey(set_3 center, float offset, tTriangle *ptr, int dir) {
     float centerOff;
     if(dir == 0) centerOff = center.y;
     else if (dir < 0) centerOff = center.y - offset;
     else centerOff = center.y + offset;
 
     build_triangley(
-        ((struct tuple2d) {.a=center.x-offset, .b=center.z+offset}),
-        ((struct tuple2d) {.a=center.x+offset, .b=center.z+offset}),
-        ((struct tuple2d) {.a=center.x-offset, .b=center.z-offset}),
+        ((struct set_2) {.a=center.x-offset, .b=center.z+offset}),
+        ((struct set_2) {.a=center.x+offset, .b=center.z+offset}),
+        ((struct set_2) {.a=center.x-offset, .b=center.z-offset}),
         centerOff, ptr);
 
     build_triangley(
-        ((struct tuple2d) {.a=center.x+offset, .b=center.z+offset}),
-        ((struct tuple2d) {.a=center.x+offset, .b=center.z-offset}),
-        ((struct tuple2d) {.a=center.x-offset, .b=center.z-offset}),
+        ((struct set_2) {.a=center.x+offset, .b=center.z+offset}),
+        ((struct set_2) {.a=center.x+offset, .b=center.z-offset}),
+        ((struct set_2) {.a=center.x-offset, .b=center.z-offset}),
         centerOff, ptr+1);
 
 }
 
-void build_squarex(tTuplef center, float offset, tTriangle *ptr, int dir)
-{
+void build_squarex(set_3 center, float offset, tTriangle *ptr, int dir) {
     float centerOff;
     if(dir == 0) centerOff = center.x;
     else if (dir < 0) centerOff = center.x - offset;
     else centerOff = center.x + offset;
 
     build_trianglex(
-        ((struct tuple2d) {.a=center.y-offset, .b=center.z+offset}),
-        ((struct tuple2d) {.a=center.y+offset, .b=center.z+offset}),
-        ((struct tuple2d) {.a=center.y-offset, .b=center.z-offset}),
+        ((struct set_2) {.a=center.y-offset, .b=center.z+offset}),
+        ((struct set_2) {.a=center.y+offset, .b=center.z+offset}),
+        ((struct set_2) {.a=center.y-offset, .b=center.z-offset}),
         centerOff, ptr);
 
     build_trianglex(
-        ((struct tuple2d) {.a=center.y+offset, .b=center.z+offset}),
-        ((struct tuple2d) {.a=center.y+offset, .b=center.z-offset}),
-        ((struct tuple2d) {.a=center.y-offset, .b=center.z-offset}),
+        ((struct set_2) {.a=center.y+offset, .b=center.z+offset}),
+        ((struct set_2) {.a=center.y+offset, .b=center.z-offset}),
+        ((struct set_2) {.a=center.y-offset, .b=center.z-offset}),
         centerOff, ptr+1);
 }
 
-void build_cube(tTuplef center, float offset, tTriangle *ptr)
-{
+void build_cube(set_3 center, float offset, tTriangle *ptr) {
   build_squarex(center,offset, ptr, -1);
   build_squarex(center,offset, ptr+2, +1);
 
@@ -322,11 +319,11 @@ void build_cube(tTuplef center, float offset, tTriangle *ptr)
   build_squarez(center,offset,ptr+10, +1);
 }
 
-tIntersect query_intersection(tTuplef screen, tTuplef eye, int triangle) {
+tIntersect query_intersection(set_3 screen, set_3 eye, int triangle) {
 
   tIntersect result = { 0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0, 0};
 
- tTuplef t1 = triangles.triangle_data[triangle].t1,
+ set_3 t1 = triangles.triangle_data[triangle].t1,
          t2 = triangles.triangle_data[triangle].t2,
          t3 = triangles.triangle_data[triangle].t3;
 
@@ -336,7 +333,7 @@ tIntersect query_intersection(tTuplef screen, tTuplef eye, int triangle) {
 
   VECTOR_INTERSECT(result.I, eye, screen, result.u);
 
-  tTuplef v1={0, 0, 0}, v2={0, 0, 0}, v3 = {0, 0, 0},
+  set_3 v1={0, 0, 0}, v2={0, 0, 0}, v3 = {0, 0, 0},
           c1={0,0,0}, c2={0,0,0}, c3={0,0,0};
 
   float d1=0.0, d2=0.0, d3=0.0;
@@ -351,14 +348,14 @@ tIntersect query_intersection(tTuplef screen, tTuplef eye, int triangle) {
   return result;
 }
 
-tIntersect query_lightray(tTuplef screen, tTuplef eye, tTuplef center, float radius) {
+tIntersect query_lightray(set_3 screen, set_3 eye, set_3 center, float radius) {
   tIntersect result = { 0.0, false };
 
   float u; VECTOR_U_SPHERE(u, eye, screen, center);
 
-  tTuplef p; VECTOR_DIST_SPHERE(p,eye,screen,u);
+  set_3 p; VECTOR_DIST_SPHERE(p,eye,screen,u);
 
-  tTuplef sub; VECTOR_SUBTRACT(sub, p, center);
+  set_3 sub; VECTOR_SUBTRACT(sub, p, center);
 
   float sub_mag; VECTOR_MAG(sub_mag, sub);
 
@@ -367,9 +364,8 @@ tIntersect query_lightray(tTuplef screen, tTuplef eye, tTuplef center, float rad
   return result;
 }
 
-float ray(tTuplef screen, tTuplef eye) {
-  #define LIGHT -1.0
-  #define TRIANGLE 1.0
+float ray(set_3 screen, set_3 eye) {
+
   float bright = 0.0;
 
   tIntersect result, closest_u;
@@ -396,15 +392,15 @@ float ray(tTuplef screen, tTuplef eye) {
     bright = 0.1;
 
     for(int i = 0; i < lights.len; i++) {
-      tTuplef oldray; VECTOR_SUBTRACT(oldray, eye, screen);
-      tTuplef newray; VECTOR_SUBTRACT(newray, closest_u.I, lights.light_data[i]);
+      set_3 oldray; VECTOR_SUBTRACT(oldray, eye, screen);
+      set_3 newray; VECTOR_SUBTRACT(newray, closest_u.I, lights.light_data[i]);
       float dot_old;  VECTOR_DOT(dot_old, oldray, closest_u.normal);
       float dot_new;  VECTOR_DOT(dot_new, newray, closest_u.normal);
 
       bool differs; CHECK_SIGNS(differs, dot_old, dot_new);
 
       if(differs) {
-        tTuplef sub_diff; VECTOR_SUBTRACT(sub_diff, closest_u.I, lights.light_data[i]);
+        set_3 sub_diff; VECTOR_SUBTRACT(sub_diff, closest_u.I, lights.light_data[i]);
         float mag; VECTOR_MAG(mag, sub_diff);
         bright += (ray(lights.light_data[i], closest_u.I)) / (mag);
       }
@@ -416,19 +412,16 @@ float ray(tTuplef screen, tTuplef eye) {
 
 void init_mod() {
 
-  build_squarey(((struct tuple){.x=0.5, .y=0.0, .z=0.5}), 0.5, triangles.triangle_data, 0);
-  build_cube(((struct tuple ){.x=0.2, .y=0.15, .z=0.6}), 0.1, triangles.triangle_data+2);
+  build_squarey(((struct set_3){.x=0.5, .y=0.0, .z=0.5}), 0.5, triangles.triangle_data, 0);
+  build_cube(((struct set_3 ){.x=0.2, .y=0.15, .z=0.6}), 0.1, triangles.triangle_data+2);
 
-  lights.light_data[0] = (struct tuple){.x=0.5, .y=0.5, .z=1.5};
+  lights.light_data[0] = (struct set_3){.x=0.5, .y=0.5, .z=1.5};
   lights.len += 1;
 
   triangles.len = 14;
 }
 
-void drawpixel(float x,float y,float r,float g,float b)
-{
-  #define SZ  0.002
-
+void drawpixel(float x,float y,float r,float g,float b) {
   glBegin(GL_TRIANGLES);
 	  glColor3f(r,g,b);
 	 	glVertex2f(-1.0+SZ*(float)x,     -1.0+SZ*(float)y);
@@ -441,30 +434,21 @@ void drawpixel(float x,float y,float r,float g,float b)
 	glEnd();
 }
 
-void run_raytracer() {
-
-#define INC 0.001
-
-  tTuplef eye = {0.5, 0.5, -1.0};
+void display(void) {
+	glClear(GL_COLOR_BUFFER_BIT);
+  set_3 eye = {0.5, 0.5, -1.0};
 
   for(float i = 0; i < 1.0; i += INC){
     for(float j = 0; j < 1.0; j += INC){
-      tTuplef screen = {i, j, 0};
+      set_3 screen = {i, j, 0};
       float color = ray(screen, eye);
       drawpixel(i*1000, j*1000, color, color, color);
     }
   }
-}
-
-void display(void)
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-  run_raytracer();
 	glFlush();
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
   glutInit(&argc,argv);
 	glutCreateWindow("Assignment 4");
   init_mod();
