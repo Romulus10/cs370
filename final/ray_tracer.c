@@ -11,55 +11,57 @@
 #define TRIANGLE 1.0
 #define INC 0.001
 #define SZ  0.002
+#define TRI_NUM 14
+#define LIGHT_NUM 1
 
-#define BUILD_SQUAREZ(center, offset, ptr) ({                    \
-		BUILD_TRIANGLEZ(                                              \
+#define BUILD_SQUAREZ(center, offset, ptr) ({                                    \
+		BUILD_TRIANGLEZ(                                                         \
 				((struct set_2) {.x=(center.x-offset), .y=(center.y+offset)}),   \
-				((struct set_2) {.x=center.x+offset, .y=center.y-offset}),   \
-				((struct set_2) {.x=center.x-offset, .y=center.y-offset}),   \
-				center.z-offset,ptr);                                         \
-		\
-		BUILD_TRIANGLEZ(                                              \
-				((struct set_2) {.x=center.x-offset, .y=center.y+offset}),   \
-				((struct set_2) {.x=center.x+offset, .y=center.y-offset}),   \
-				((struct set_2) {.x=center.x-offset, .y=center.y-offset}),   \
-				center.z+offset,ptr+1);                                         \
+				((struct set_2) {.x=center.x+offset, .y=center.y-offset}),       \
+				((struct set_2) {.x=center.x-offset, .y=center.y-offset}),       \
+				center.z-offset,ptr);                                            \
+		                                                                         \
+		BUILD_TRIANGLEZ(                                                         \
+				((struct set_2) {.x=center.x-offset, .y=center.y+offset}),       \
+				((struct set_2) {.x=center.x+offset, .y=center.y-offset}),       \
+				((struct set_2) {.x=center.x-offset, .y=center.y-offset}),       \
+				center.z+offset,ptr+1);                                          \
 		})
 
-#define BUILD_SQUAREY(center, offset, ptr) ({                  \
-		BUILD_TRIANGLEY(                                              \
-				((struct set_2) {.x=center.x-offset, .z=center.z+offset}),   \
-				((struct set_2) {.x=center.x+offset, .z=center.z-offset}),   \
-				((struct set_2) {.x=center.x-offset, .z=center.z-offset}),   \
-				center.y-offset, ptr);                                         \
-		\
-		BUILD_TRIANGLEY(                                              \
-				((struct set_2) {.x=center.x-offset, .z=center.z+offset}),   \
-				((struct set_2) {.x=center.x+offset, .z=center.z-offset}),   \
-				((struct set_2) {.x=center.x-offset, .z=center.z-offset}),   \
+#define BUILD_SQUAREY(center, offset, ptr) ({                                    \
+		BUILD_TRIANGLEY(                                                         \
+				((struct set_2) {.x=center.x-offset, .z=center.z+offset}),       \
+				((struct set_2) {.x=center.x+offset, .z=center.z-offset}),       \
+				((struct set_2) {.x=center.x-offset, .z=center.z-offset}),       \
+				center.y-offset, ptr);                                           \
+		                                                                         \
+		BUILD_TRIANGLEY(                                                         \
+				((struct set_2) {.x=center.x-offset, .z=center.z+offset}),       \
+				((struct set_2) {.x=center.x+offset, .z=center.z-offset}),       \
+				((struct set_2) {.x=center.x-offset, .z=center.z-offset}),       \
 				center.y+offset, ptr+1);                                         \
 		})
 
-#define BUILD_SQUAREX(center, offset, ptr) ({                     \
-		BUILD_TRIANGLEX(                                             \
+#define BUILD_SQUAREX(center, offset, ptr) ({                                    \
+		BUILD_TRIANGLEX(                                                         \
 				((struct set_2) {.y=center.y-offset, .z=center.z+offset}),       \
 				((struct set_2) {.y=center.y+offset, .z=center.z-offset}),       \
 				((struct set_2) {.y=center.y-offset, .z=center.z-offset}),       \
-				center.x-offset, ptr);                                         \
-		\
-		BUILD_TRIANGLEX(                                              \
+				center.x-offset, ptr);                                           \
+		                                                                         \
+		BUILD_TRIANGLEX(                                                         \
 				((struct set_2) {.y=center.y-offset, .z=center.z+offset}),       \
 				((struct set_2) {.y=center.y+offset, .z=center.z-offset}),       \
 				((struct set_2) {.y=center.y-offset, .z=center.z-offset}),       \
 				center.x+offset, ptr+1);                                         \
 		})
 
-#define CHECK_SIGNS(R, X, Y) ({                    \
-		R = !((X >= 0) ^ (Y < 0));                     \
-		})                                             \
+#define CHECK_SIGNS(R, X, Y) ({                                                  \
+		R = !((X >= 0) ^ (Y < 0));                                               \
+		})                                                                       \
 
-#define VECTOR_TEST_RADIUS(R, P1, P2, P3, RAD) ({  \
-		float _u;                                      \
+#define VECTOR_TEST_RADIUS(R, P1, P2, P3, RAD) ({                                \
+		float _u;                                                                \
 		VECTOR_U_SPHERE(_u, P1, P2, P3);               \
 		\
 		set_3 _p;                                    \
@@ -204,23 +206,19 @@ typedef struct {
 typedef struct {
 	triangle triangle_arr[1024];
 	triangle *triangle_data;
-	int len;
 } asgn5_data;
 
 typedef struct {
 	set_3 light_arr[1024];
 	set_3 *light_data;
-	int len;
 } light_data;
 
 asgn5_data triangles = {
-	.triangle_data = &triangles.triangle_arr[0],
-	.len = 0
+	.triangle_data = &triangles.triangle_arr[0]
 };
 
 light_data lights = {
-	.light_data = &lights.light_arr[0],
-	.len = 0
+	.light_data = &lights.light_arr[0]
 };
 
 void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
@@ -359,7 +357,7 @@ float ray(set_3 screen, set_3 eye) {
 	inter result, closest_u;
 	closest_u.u = INFINITY;
 
-	for (int i = 0; i < triangles.len; i++) {
+	for (int i = 0; i < TRI_NUM; i++) {
 		result = query_intersection(screen, eye, i);
 		if(result.u < closest_u.u && result.u > 0 && result.lit){
 			closest_u = result;
@@ -367,7 +365,7 @@ float ray(set_3 screen, set_3 eye) {
 		}
 	}
 
-	for (int i = 0; i < lights.len; i++) {
+	for (int i = 0; i < LIGHT_NUM; i++) {
 		result = query_lightray(screen, eye, lights.light_data[i], .1);
 		if(result.u < closest_u.u && result.u > 0 && result.lit){
 			closest_u = result;
@@ -379,7 +377,7 @@ float ray(set_3 screen, set_3 eye) {
 	if(closest_u.type == TRIANGLE) {
 		bright = 0.1;
 
-		for(int i = 0; i < lights.len; i++) {
+		for(int i = 0; i < LIGHT_NUM; i++) {
 			set_3 oldray; VECTOR_SUBTRACT(oldray, eye, screen);
 			set_3 newray; VECTOR_SUBTRACT(newray, closest_u.I, lights.light_data[i]);
 			float dot_old;  VECTOR_DOT(dot_old, oldray, closest_u.normal);
@@ -401,11 +399,7 @@ float ray(set_3 screen, set_3 eye) {
 void init_mod() {
 	build_squarey(((struct set_3){.x=0.5, .y=0.0, .z=0.5}), 0.5, triangles.triangle_data, 0);
 	build_cube(((struct set_3 ){.x=0.2, .y=0.15, .z=0.6}), 0.1, triangles.triangle_data+2);
-
 	lights.light_data[0] = (struct set_3){.x=0.5, .y=0.5, .z=1.5};
-	lights.len += 1;
-
-	triangles.len = 14;
 }
 
 void drawpixel(float x,float y,float r,float g,float b) {
