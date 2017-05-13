@@ -4,7 +4,9 @@ INCDIR=-I../include
 LIBDIR=-L../lib -L/usr/X11R6/lib
 CC=gcc
 
-asgn5: skeleton.c
-	$(CC) skeleton.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o asgn5
+asgn5: ray_tracer.c
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o asgn5
 clean:
 	rm asgn5
+run:
+	./asgn5
