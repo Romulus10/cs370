@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define DEBUG 0
-#define GL_TEST 0
 #define LIGHT -1.0
 #define TRIANGLE 1.0
 #define INC 0.001
@@ -203,6 +201,11 @@ typedef struct triangle {
   set_3 t3;
 } triangle;
 
+typedef struct light {
+  set_3 center;
+  float radius;
+} light;
+
 typedef struct {
   float u;
   set_3 normal;
@@ -212,19 +215,8 @@ typedef struct {
   int ind;
 } inter;
 
-typedef struct {
-  triangle triangle_arr[1024];
-  triangle *triangle_data;
-} asgn5_data;
-
-typedef struct {
-  set_3 light_arr[1024];
-  set_3 *light_data;
-} light_data;
-
-asgn5_data triangles = {.triangle_data = &triangles.triangle_arr[0]};
-
-light_data lights = {.light_data = &lights.light_arr[0]};
+triangle *triangles;
+light *lights;
 
 void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
   *(ptr) = ((triangle){.t1 = {plane, v1.a, v1.b},
@@ -246,13 +238,13 @@ void build_trianglez(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
 
 void build_squarez(set_3 center, float offset, triangle *ptr, int dir) {
   float centerOff;
-  if (dir == 0)
+  if (dir == 0) {
     centerOff = center.z;
-  else if (dir < 0)
+  } else if (dir < 0) {
     centerOff = center.z - offset;
-  else
+  } else {
     centerOff = center.z + offset;
-
+  }
   build_trianglez(((set_2){.a = center.x - offset, .b = center.y + offset}),
                   ((set_2){.a = center.x + offset, .b = center.y + offset}),
                   ((set_2){.a = center.x - offset, .b = center.y - offset}),
@@ -266,13 +258,13 @@ void build_squarez(set_3 center, float offset, triangle *ptr, int dir) {
 
 void build_squarey(set_3 center, float offset, triangle *ptr, int dir) {
   float centerOff;
-  if (dir == 0)
+  if (dir == 0) {
     centerOff = center.y;
-  else if (dir < 0)
+  } else if (dir < 0) {
     centerOff = center.y - offset;
-  else
+  } else {
     centerOff = center.y + offset;
-
+  }
   build_triangley(((set_2){.a = center.x - offset, .b = center.z + offset}),
                   ((set_2){.a = center.x + offset, .b = center.z + offset}),
                   ((set_2){.a = center.x - offset, .b = center.z - offset}),
@@ -286,13 +278,13 @@ void build_squarey(set_3 center, float offset, triangle *ptr, int dir) {
 
 void build_squarex(set_3 center, float offset, triangle *ptr, int dir) {
   float centerOff;
-  if (dir == 0)
+  if (dir == 0) {
     centerOff = center.x;
-  else if (dir < 0)
+  } else if (dir < 0) {
     centerOff = center.x - offset;
-  else
+  } else {
     centerOff = center.x + offset;
-
+  }
   build_trianglex(((set_2){.a = center.y - offset, .b = center.z + offset}),
                   ((set_2){.a = center.y + offset, .b = center.z + offset}),
                   ((set_2){.a = center.y - offset, .b = center.z - offset}),
@@ -318,9 +310,8 @@ void build_cube(set_3 center, float offset, triangle *ptr) {
 inter query_intersection(set_3 screen, set_3 eye, int triangle) {
   inter result = {0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0, 0};
 
-  set_3 t1 = triangles.triangle_data[triangle].t1,
-        t2 = triangles.triangle_data[triangle].t2,
-        t3 = triangles.triangle_data[triangle].t3;
+  set_3 t1 = triangles[triangle].t1, t2 = triangles[triangle].t2,
+        t3 = triangles[triangle].t3;
 
   VECTOR_NORMAL(result.normal, t1, t2, t3);
 
@@ -337,16 +328,16 @@ inter query_intersection(set_3 screen, set_3 eye, int triangle) {
   VECTOR_CS(c1, c2, c3, v1, v2, v3);
   VECTOR_DS(d1, d2, d3, c1, c2, c3);
 
-  if ((d1 > 0) && (d2 > 0) && (d3 > 0))
+  if ((d1 > 0) && (d2 > 0) && (d3 > 0)) {
     result.lit = true;
-  else
+  } else {
     result.lit = false;
-
+  }
   return result;
 }
 
 inter query_lightray(set_3 screen, set_3 eye, set_3 center, float radius) {
-  inter result = {0.0, false};
+  inter result = (inter){.u = 0.0, .lit = false};
   float u;
   VECTOR_U_SPHERE(u, eye, screen, center);
   set_3 p;
@@ -374,15 +365,16 @@ float ray(set_3 screen, set_3 eye) {
   }
 
   for (int i = 0; i < LIGHT_NUM; i++) {
-    result = query_lightray(screen, eye, lights.light_data[i], .1);
+    result = query_lightray(screen, eye, lights[i].center, .1);
     if (result.u < closest_u.u && result.u > 0 && result.lit) {
       closest_u = result;
       closest_u.type = LIGHT;
     }
   }
 
-  if (closest_u.type == LIGHT)
+  if (closest_u.type == LIGHT) {
     bright = 1.0;
+  }
   if (closest_u.type == TRIANGLE) {
     bright = 0.1;
 
@@ -390,7 +382,7 @@ float ray(set_3 screen, set_3 eye) {
       set_3 oldray;
       VECTOR_SUBTRACT(oldray, eye, screen);
       set_3 newray;
-      VECTOR_SUBTRACT(newray, closest_u.I, lights.light_data[i]);
+      VECTOR_SUBTRACT(newray, closest_u.I, lights[i].center);
       float dot_old;
       VECTOR_DOT(dot_old, oldray, closest_u.normal);
       float dot_new;
@@ -401,10 +393,10 @@ float ray(set_3 screen, set_3 eye) {
 
       if (differs) {
         set_3 sub_diff;
-        VECTOR_SUBTRACT(sub_diff, closest_u.I, lights.light_data[i]);
+        VECTOR_SUBTRACT(sub_diff, closest_u.I, lights[i].center);
         float mag;
         VECTOR_MAG(mag, sub_diff);
-        bright += (ray(lights.light_data[i], closest_u.I)) / (mag);
+        bright += (ray(lights[i].center, closest_u.I)) / (mag);
       }
     }
   }
@@ -413,14 +405,12 @@ float ray(set_3 screen, set_3 eye) {
 }
 
 void init_mod() {
-  build_squarey(((set_3){.x = 0.5, .y = 0.0, .z = 0.5}), 0.5,
-                triangles.triangle_data, 0);
-  build_cube(((set_3){.x = 0.2, .y = 0.15, .z = 0.6}), 0.1,
-             triangles.triangle_data + 2);
-  lights.light_data[0] = (set_3){.x = 0.5, .y = 0.5, .z = 1.5};
+  build_squarey(((set_3){.x = 0.5, .y = 0.0, .z = 0.5}), 0.5, triangles, 0);
+  build_cube(((set_3){.x = 0.2, .y = 0.15, .z = 0.6}), 0.1, triangles + 2);
+  lights[0] = (light){(set_3){.x = 0.5, .y = 0.5, .z = 1.5}};
 }
 
-void drawpixel(float x, float y, float r, float g, float b) {
+void draw_pixel(float x, float y, float r, float g, float b) {
   glBegin(GL_TRIANGLES);
   glColor3f(r, g, b);
   glVertex2f(-1.0 + SZ * (float)x, -1.0 + SZ * (float)y);
@@ -441,15 +431,17 @@ void display(void) {
     for (float j = 0; j < 1.0; j += INC) {
       set_3 screen = {i, j, 0};
       float b = ray(screen, eye);
-      drawpixel(i * 1000, j * 1000, b, b, b);
+      draw_pixel(i * 1000, j * 1000, b, b, b);
     }
   }
   glFlush();
 }
 
 int main(int argc, char **argv) {
+  triangles = malloc(sizeof(triangle) * TRI_NUM);
+  lights = malloc(sizeof(light) * LIGHT_NUM);
   glutInit(&argc, argv);
-  glutCreateWindow("Assignment 4");
+  glutCreateWindow("ray tracer");
   init_mod();
   glutDisplayFunc(display);
   glutMainLoop();

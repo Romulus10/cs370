@@ -1,4 +1,4 @@
-FLAGS=-D_LINUX -ffast-math -funroll-loops -O0 -g -std=gnu99 -trigraphs
+FLAGS=-D_LINUX -ffast-math -funroll-loops -O0 -g -std=gnu99 -trigraphs -Werror -Wall
 LIBS=-lGL -lglut -lGLU -lm
 INCDIR=-I../include
 LIBDIR=-L../lib -L/usr/X11R6/lib
