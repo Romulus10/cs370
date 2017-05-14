@@ -23,11 +23,12 @@ cleanup:
 	rm tmp.txt
 all:
 	make cleanup
+	make check
 	make clean
 	make
 	make run
 check:
-	cppcheck --enable=all --inconclusive --std=posix --check-config ray_tracer.c
+	cppcheck --enable=all --inconclusive --std=posix --check-config --suppress=missingIncludeSystem ray_tracer.c
 no-link:
 	make clean
 	make asm

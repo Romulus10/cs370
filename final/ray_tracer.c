@@ -73,8 +73,8 @@
 
 #define VECTOR_U(P, N, T, P1, P2)                                              \
   ({                                                                           \
-    float arg1, arg2;                                                  \
-    set_3 TminusP1, P2minusP1;                         \
+    float arg1, arg2;                                                          \
+    set_3 TminusP1, P2minusP1;                                                 \
     VECTOR_SUBTRACT(TminusP1, T, P1);                                          \
     VECTOR_SUBTRACT(P2minusP1, P2, P1);                                        \
     VECTOR_DOT(arg1, N, TminusP1);                                             \
@@ -84,7 +84,7 @@
 
 #define VECTOR_NORMAL(R, T1, T2, T3)                                           \
   ({                                                                           \
-    set_3 arg1, arg2;                                  \
+    set_3 arg1, arg2;                                                          \
     VECTOR_SUBTRACT(arg1, T2, T1);                                             \
     VECTOR_SUBTRACT(arg2, T3, T1);                                             \
     VECTOR_CROSS(R, arg1, arg2);                                               \
@@ -235,8 +235,7 @@ void build_cube(set_3 center, float offset, triangle *ptr) {
 inter intersect(set_3 screen, set_3 eye, int i) {
   inter result = {0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0, 0};
 
-  set_3 t1 = triangles[i].t1, t2 = triangles[i].t2,
-        t3 = triangles[i].t3;
+  set_3 t1 = triangles[i].t1, t2 = triangles[i].t2, t3 = triangles[i].t3;
 
   VECTOR_NORMAL(result.normal, t1, t2, t3);
 
