@@ -27,8 +27,9 @@ all:
 	make
 	make run
 check:
-	valgrind $(BLD) # Hangs after a bit and never draws the scene.
+	cppcheck --enable=all --inconclusive --std=posix --check-config ray_tracer.c
 no-link:
 	make clean
 	make asm
 	make obj
+

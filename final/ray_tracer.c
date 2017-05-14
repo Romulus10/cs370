@@ -1,33 +1,17 @@
 #include <GL/glut.h>
 #include <math.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 #define LIGHT -1.0
 #define TRIANGLE 1.0
+
 #define INC 0.001
 #define SZ 0.002
+#define RES 1000
+
 #define TRI_NUM 14
 #define LIGHT_NUM 1
-
-#define VECTOR_TEST_RADIUS(R, P1, P2, P3, RAD)                                 \
-  ({                                                                           \
-    float _u;                                                                  \
-    VECTOR_U_SPHERE(_u, P1, P2, P3);                                           \
-                                                                               \
-    set_3 _p;                                                                  \
-    VECTOR_DIST_SPHERE(_p, P1, P2, _u);                                        \
-                                                                               \
-    set_3 _sub;                                                                \
-    VECTOR_SUBTRACT(_sub, _p, P3);                                             \
-                                                                               \
-    float _sub_mag;                                                            \
-    VECTOR_MAG(_sub_mag, _sub);                                                \
-                                                                               \
-    R = _sub_mag <= RAD;                                                       \
-  })
 
 #define VECTOR_DIST_SPHERE(R, P1, P2, U)                                       \
   ({                                                                           \
@@ -89,8 +73,8 @@
 
 #define VECTOR_U(P, N, T, P1, P2)                                              \
   ({                                                                           \
-    float arg1 = 0, arg2 = 0;                                                  \
-    set_3 TminusP1 = {0, 0, 0}, P2minusP1 = {0, 0, 0};                         \
+    float arg1, arg2;                                                  \
+    set_3 TminusP1, P2minusP1;                         \
     VECTOR_SUBTRACT(TminusP1, T, P1);                                          \
     VECTOR_SUBTRACT(P2minusP1, P2, P1);                                        \
     VECTOR_DOT(arg1, N, TminusP1);                                             \
@@ -100,7 +84,7 @@
 
 #define VECTOR_NORMAL(R, T1, T2, T3)                                           \
   ({                                                                           \
-    set_3 arg1 = {0, 0, 0}, arg2 = {0, 0, 0};                                  \
+    set_3 arg1, arg2;                                  \
     VECTOR_SUBTRACT(arg1, T2, T1);                                             \
     VECTOR_SUBTRACT(arg2, T3, T1);                                             \
     VECTOR_CROSS(R, arg1, arg2);                                               \
@@ -248,11 +232,11 @@ void build_cube(set_3 center, float offset, triangle *ptr) {
   square_z(center, offset, ptr + 10, +1);
 }
 
-inter intersect(set_3 screen, set_3 eye, int triangle) {
+inter intersect(set_3 screen, set_3 eye, int i) {
   inter result = {0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0, 0};
 
-  set_3 t1 = triangles[triangle].t1, t2 = triangles[triangle].t2,
-        t3 = triangles[triangle].t3;
+  set_3 t1 = triangles[i].t1, t2 = triangles[i].t2,
+        t3 = triangles[i].t3;
 
   VECTOR_NORMAL(result.normal, t1, t2, t3);
 
@@ -260,10 +244,9 @@ inter intersect(set_3 screen, set_3 eye, int triangle) {
 
   VECTOR_INTERSECT(result.I, eye, screen, result.u);
 
-  set_3 v1 = {0, 0, 0}, v2 = {0, 0, 0}, v3 = {0, 0, 0}, c1 = {0, 0, 0},
-        c2 = {0, 0, 0}, c3 = {0, 0, 0};
+  set_3 v1, v2, v3, c1, c2, c3;
 
-  float d1 = 0.0, d2 = 0.0, d3 = 0.0;
+  float d1, d2, d3;
 
   VECTOR_VS(v1, v2, v3, t1, t2, t3, result.I);
   VECTOR_CS(c1, c2, c3, v1, v2, v3);
@@ -294,51 +277,50 @@ inter intersect_light(set_3 screen, set_3 eye, set_3 center, float radius) {
 
 float ray(set_3 screen, set_3 eye) {
   float bright = 0.0;
-  inter result, closest_u;
-  closest_u.u = INFINITY;
+  inter result, closest;
+  closest.u = INFINITY;
 
   for (int i = 0; i < TRI_NUM; i++) {
     result = intersect(screen, eye, i);
-    if (result.u < closest_u.u && result.u > 0 && result.lit) {
-      closest_u = result;
-      closest_u.type = TRIANGLE;
+    if (result.u < closest.u && result.u > 0 && result.lit) {
+      closest = result;
+      closest.type = TRIANGLE;
     }
   }
 
   for (int i = 0; i < LIGHT_NUM; i++) {
     result = intersect_light(screen, eye, lights[i].center, .1);
-    if (result.u < closest_u.u && result.u > 0 && result.lit) {
-      closest_u = result;
-      closest_u.type = LIGHT;
+    if (result.u < closest.u && result.u > 0 && result.lit) {
+      closest = result;
+      closest.type = LIGHT;
     }
   }
 
-  if (closest_u.type == LIGHT) {
+  if (closest.type == LIGHT) {
     bright = 1.0;
   }
-  if (closest_u.type == TRIANGLE) {
+  if (closest.type == TRIANGLE) {
     bright = 0.1;
 
     for (int i = 0; i < LIGHT_NUM; i++) {
       set_3 oldray;
       VECTOR_SUBTRACT(oldray, eye, screen);
       set_3 newray;
-      VECTOR_SUBTRACT(newray, closest_u.I, lights[i].center);
+      VECTOR_SUBTRACT(newray, closest.I, lights[i].center);
       float dot_old;
-      VECTOR_DOT(dot_old, oldray, closest_u.normal);
+      VECTOR_DOT(dot_old, oldray, closest.normal);
       float dot_new;
-      VECTOR_DOT(dot_new, newray, closest_u.normal);
+      VECTOR_DOT(dot_new, newray, closest.normal);
 
       if (check_sign(dot_old, dot_new)) {
         set_3 sub_diff;
-        VECTOR_SUBTRACT(sub_diff, closest_u.I, lights[i].center);
+        VECTOR_SUBTRACT(sub_diff, closest.I, lights[i].center);
         float mag;
         VECTOR_MAG(mag, sub_diff);
-        bright += (ray(lights[i].center, closest_u.I)) / (mag);
+        bright += (ray(lights[i].center, closest.I)) / (mag);
       }
     }
   }
-
   return bright;
 }
 
@@ -369,7 +351,7 @@ void display(void) {
     for (float j = 0; j < 1.0; j += INC) {
       set_3 screen = {i, j, 0};
       float b = ray(screen, eye);
-      draw_pixel(i * 1000, j * 1000, b, b, b);
+      draw_pixel(i * RES, j * RES, b, b, b);
     }
   }
   glFlush();
@@ -383,4 +365,6 @@ int main(int argc, char **argv) {
   init_mod();
   glutDisplayFunc(display);
   glutMainLoop();
+  free(triangles);
+  free(lights);
 }
