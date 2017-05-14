@@ -12,53 +12,6 @@
 #define TRI_NUM 14
 #define LIGHT_NUM 1
 
-#define BUILD_SQUAREZ(center, offset, ptr)                                     \
-  ({                                                                           \
-    BUILD_TRIANGLEZ(                                                           \
-        ((struct set_2){.x = (center.x - offset), .y = (center.y + offset)}),  \
-        ((struct set_2){.x = center.x + offset, .y = center.y - offset}),      \
-        ((struct set_2){.x = center.x - offset, .y = center.y - offset}),      \
-        center.z - offset, ptr);                                               \
-                                                                               \
-    BUILD_TRIANGLEZ(                                                           \
-        ((struct set_2){.x = center.x - offset, .y = center.y + offset}),      \
-        ((struct set_2){.x = center.x + offset, .y = center.y - offset}),      \
-        ((struct set_2){.x = center.x - offset, .y = center.y - offset}),      \
-        center.z + offset, ptr + 1);                                           \
-  })
-
-#define BUILD_SQUAREY(center, offset, ptr)                                     \
-  ({                                                                           \
-    BUILD_TRIANGLEY(                                                           \
-        ((struct set_2){.x = center.x - offset, .z = center.z + offset}),      \
-        ((struct set_2){.x = center.x + offset, .z = center.z - offset}),      \
-        ((struct set_2){.x = center.x - offset, .z = center.z - offset}),      \
-        center.y - offset, ptr);                                               \
-                                                                               \
-    BUILD_TRIANGLEY(                                                           \
-        ((struct set_2){.x = center.x - offset, .z = center.z + offset}),      \
-        ((struct set_2){.x = center.x + offset, .z = center.z - offset}),      \
-        ((struct set_2){.x = center.x - offset, .z = center.z - offset}),      \
-        center.y + offset, ptr + 1);                                           \
-  })
-
-#define BUILD_SQUAREX(center, offset, ptr)                                     \
-  ({                                                                           \
-    BUILD_TRIANGLEX(                                                           \
-        ((struct set_2){.y = center.y - offset, .z = center.z + offset}),      \
-        ((struct set_2){.y = center.y + offset, .z = center.z - offset}),      \
-        ((struct set_2){.y = center.y - offset, .z = center.z - offset}),      \
-        center.x - offset, ptr);                                               \
-                                                                               \
-    BUILD_TRIANGLEX(                                                           \
-        ((struct set_2){.y = center.y - offset, .z = center.z + offset}),      \
-        ((struct set_2){.y = center.y + offset, .z = center.z - offset}),      \
-        ((struct set_2){.y = center.y - offset, .z = center.z - offset}),      \
-        center.x + offset, ptr + 1);                                           \
-  })
-
-#define CHECK_SIGNS(R, X, Y) ({ R = !((X >= 0) ^ (Y < 0)); })
-
 #define VECTOR_TEST_RADIUS(R, P1, P2, P3, RAD)                                 \
   ({                                                                           \
     float _u;                                                                  \
@@ -154,35 +107,21 @@
   })
 
 #define VECTOR_CROSS(R, V1, V2)                                                \
-  ({                                                                           \
-    R.x = (V1.y * V2.z) - (V1.z * V2.y);                                       \
-    R.y = (V1.z * V2.x) - (V1.x * V2.z);                                       \
-    R.z = (V1.x * V2.y) - (V1.y * V2.x);                                       \
-  })
+  (R = (set_3){(V1.y * V2.z) - (V1.z * V2.y), (V1.z * V2.x) - (V1.x * V2.z),   \
+               (V1.x * V2.y) - (V1.y * V2.x)})
 
 #define VECTOR_DOT(P, V1, V2)                                                  \
-  ({ P = (V1.x * V2.x) + (V1.y * V2.y) + (V1.z * V2.z); })
+  (P = (V1.x * V2.x) + (V1.y * V2.y) + (V1.z * V2.z))
 
-#define VECTOR_MULTIPLY_S(R, V1, s)                                            \
-  ({                                                                           \
-    R.x = V1.x * s;                                                            \
-    R.y = V1.y * s;                                                            \
-    R.z = V1.z * s;                                                            \
-  })
+#define VECTOR_MULTIPLY_S(R, V1, s) (R = (set_3){V1.x * s, V1.y * s, V1.z * s})
 
 #define VECTOR_ADD(R, V1, V2)                                                  \
-  ({                                                                           \
-    R.x = V1.x + V2.x;                                                         \
-    R.y = V1.y + V2.y;                                                         \
-    R.z = V1.z + V2.z;                                                         \
-  })
+  (R = (set_3){V1.x + V2.x, V1.y + V2.y, V1.z + V2.z})
 
 #define VECTOR_SUBTRACT(R, V1, V2)                                             \
-  ({                                                                           \
-    R.x = V1.x - V2.x;                                                         \
-    R.y = V1.y - V2.y;                                                         \
-    R.z = V1.z - V2.z;                                                         \
-  })
+  (R = (set_3){V1.x - V2.x, V1.y - V2.y, V1.z - V2.z})
+
+#define CHECK_D(D1, D2, D3) ((d1 > 0) && (d2 > 0) && (d3 > 0))
 
 typedef struct set_3 {
   float x;
@@ -215,28 +154,30 @@ typedef struct {
   int ind;
 } inter;
 
+bool check_sign(float x, float y) { return (!((x >= 0) ^ (y < 0))); }
+
 triangle *triangles;
 light *lights;
 
-void build_trianglex(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
+void triangle_x(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
   *(ptr) = ((triangle){.t1 = {plane, v1.a, v1.b},
                        .t2 = {plane, v2.a, v2.b},
                        .t3 = {plane, v3.a, v3.b}});
 }
 
-void build_triangley(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
+void triangle_y(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
   *(ptr) = ((triangle){.t1 = {v1.a, plane, v1.b},
                        .t2 = {v2.a, plane, v2.b},
                        .t3 = {v3.a, plane, v3.b}});
 }
 
-void build_trianglez(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
+void triangle_z(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
   *(ptr) = (triangle){.t1 = {v1.a, v1.b, plane},
                       .t2 = {v2.a, v2.b, plane},
                       .t3 = {v3.a, v3.b, plane}};
 }
 
-void build_squarez(set_3 center, float offset, triangle *ptr, int dir) {
+void square_z(set_3 center, float offset, triangle *ptr, int dir) {
   float centerOff;
   if (dir == 0) {
     centerOff = center.z;
@@ -245,18 +186,18 @@ void build_squarez(set_3 center, float offset, triangle *ptr, int dir) {
   } else {
     centerOff = center.z + offset;
   }
-  build_trianglez(((set_2){.a = center.x - offset, .b = center.y + offset}),
-                  ((set_2){.a = center.x + offset, .b = center.y + offset}),
-                  ((set_2){.a = center.x - offset, .b = center.y - offset}),
-                  centerOff, ptr);
+  triangle_z(((set_2){.a = center.x - offset, .b = center.y + offset}),
+             ((set_2){.a = center.x + offset, .b = center.y + offset}),
+             ((set_2){.a = center.x - offset, .b = center.y - offset}),
+             centerOff, ptr);
 
-  build_trianglez(((set_2){.a = center.x + offset, .b = center.y + offset}),
-                  ((set_2){.a = center.x + offset, .b = center.y - offset}),
-                  ((set_2){.a = center.x - offset, .b = center.y - offset}),
-                  centerOff, ptr + 1);
+  triangle_z(((set_2){.a = center.x + offset, .b = center.y + offset}),
+             ((set_2){.a = center.x + offset, .b = center.y - offset}),
+             ((set_2){.a = center.x - offset, .b = center.y - offset}),
+             centerOff, ptr + 1);
 }
 
-void build_squarey(set_3 center, float offset, triangle *ptr, int dir) {
+void square_y(set_3 center, float offset, triangle *ptr, int dir) {
   float centerOff;
   if (dir == 0) {
     centerOff = center.y;
@@ -265,18 +206,18 @@ void build_squarey(set_3 center, float offset, triangle *ptr, int dir) {
   } else {
     centerOff = center.y + offset;
   }
-  build_triangley(((set_2){.a = center.x - offset, .b = center.z + offset}),
-                  ((set_2){.a = center.x + offset, .b = center.z + offset}),
-                  ((set_2){.a = center.x - offset, .b = center.z - offset}),
-                  centerOff, ptr);
+  triangle_y(((set_2){.a = center.x - offset, .b = center.z + offset}),
+             ((set_2){.a = center.x + offset, .b = center.z + offset}),
+             ((set_2){.a = center.x - offset, .b = center.z - offset}),
+             centerOff, ptr);
 
-  build_triangley(((set_2){.a = center.x + offset, .b = center.z + offset}),
-                  ((set_2){.a = center.x + offset, .b = center.z - offset}),
-                  ((set_2){.a = center.x - offset, .b = center.z - offset}),
-                  centerOff, ptr + 1);
+  triangle_y(((set_2){.a = center.x + offset, .b = center.z + offset}),
+             ((set_2){.a = center.x + offset, .b = center.z - offset}),
+             ((set_2){.a = center.x - offset, .b = center.z - offset}),
+             centerOff, ptr + 1);
 }
 
-void build_squarex(set_3 center, float offset, triangle *ptr, int dir) {
+void square_x(set_3 center, float offset, triangle *ptr, int dir) {
   float centerOff;
   if (dir == 0) {
     centerOff = center.x;
@@ -285,29 +226,29 @@ void build_squarex(set_3 center, float offset, triangle *ptr, int dir) {
   } else {
     centerOff = center.x + offset;
   }
-  build_trianglex(((set_2){.a = center.y - offset, .b = center.z + offset}),
-                  ((set_2){.a = center.y + offset, .b = center.z + offset}),
-                  ((set_2){.a = center.y - offset, .b = center.z - offset}),
-                  centerOff, ptr);
+  triangle_x(((set_2){.a = center.y - offset, .b = center.z + offset}),
+             ((set_2){.a = center.y + offset, .b = center.z + offset}),
+             ((set_2){.a = center.y - offset, .b = center.z - offset}),
+             centerOff, ptr);
 
-  build_trianglex(((set_2){.a = center.y + offset, .b = center.z + offset}),
-                  ((set_2){.a = center.y + offset, .b = center.z - offset}),
-                  ((set_2){.a = center.y - offset, .b = center.z - offset}),
-                  centerOff, ptr + 1);
+  triangle_x(((set_2){.a = center.y + offset, .b = center.z + offset}),
+             ((set_2){.a = center.y + offset, .b = center.z - offset}),
+             ((set_2){.a = center.y - offset, .b = center.z - offset}),
+             centerOff, ptr + 1);
 }
 
 void build_cube(set_3 center, float offset, triangle *ptr) {
-  build_squarex(center, offset, ptr, -1);
-  build_squarex(center, offset, ptr + 2, +1);
+  square_x(center, offset, ptr, -1);
+  square_x(center, offset, ptr + 2, +1);
 
-  build_squarey(center, offset, ptr + 4, -1);
-  build_squarey(center, offset, ptr + 6, +1);
+  square_y(center, offset, ptr + 4, -1);
+  square_y(center, offset, ptr + 6, +1);
 
-  build_squarez(center, offset, ptr + 8, -1);
-  build_squarez(center, offset, ptr + 10, +1);
+  square_z(center, offset, ptr + 8, -1);
+  square_z(center, offset, ptr + 10, +1);
 }
 
-inter query_intersection(set_3 screen, set_3 eye, int triangle) {
+inter intersect(set_3 screen, set_3 eye, int triangle) {
   inter result = {0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0, 0};
 
   set_3 t1 = triangles[triangle].t1, t2 = triangles[triangle].t2,
@@ -328,7 +269,7 @@ inter query_intersection(set_3 screen, set_3 eye, int triangle) {
   VECTOR_CS(c1, c2, c3, v1, v2, v3);
   VECTOR_DS(d1, d2, d3, c1, c2, c3);
 
-  if ((d1 > 0) && (d2 > 0) && (d3 > 0)) {
+  if (CHECK_D(d1, d2, d3)) {
     result.lit = true;
   } else {
     result.lit = false;
@@ -336,7 +277,7 @@ inter query_intersection(set_3 screen, set_3 eye, int triangle) {
   return result;
 }
 
-inter query_lightray(set_3 screen, set_3 eye, set_3 center, float radius) {
+inter intersect_light(set_3 screen, set_3 eye, set_3 center, float radius) {
   inter result = (inter){.u = 0.0, .lit = false};
   float u;
   VECTOR_U_SPHERE(u, eye, screen, center);
@@ -357,7 +298,7 @@ float ray(set_3 screen, set_3 eye) {
   closest_u.u = INFINITY;
 
   for (int i = 0; i < TRI_NUM; i++) {
-    result = query_intersection(screen, eye, i);
+    result = intersect(screen, eye, i);
     if (result.u < closest_u.u && result.u > 0 && result.lit) {
       closest_u = result;
       closest_u.type = TRIANGLE;
@@ -365,7 +306,7 @@ float ray(set_3 screen, set_3 eye) {
   }
 
   for (int i = 0; i < LIGHT_NUM; i++) {
-    result = query_lightray(screen, eye, lights[i].center, .1);
+    result = intersect_light(screen, eye, lights[i].center, .1);
     if (result.u < closest_u.u && result.u > 0 && result.lit) {
       closest_u = result;
       closest_u.type = LIGHT;
@@ -388,10 +329,7 @@ float ray(set_3 screen, set_3 eye) {
       float dot_new;
       VECTOR_DOT(dot_new, newray, closest_u.normal);
 
-      bool differs;
-      CHECK_SIGNS(differs, dot_old, dot_new);
-
-      if (differs) {
+      if (check_sign(dot_old, dot_new)) {
         set_3 sub_diff;
         VECTOR_SUBTRACT(sub_diff, closest_u.I, lights[i].center);
         float mag;
@@ -405,7 +343,7 @@ float ray(set_3 screen, set_3 eye) {
 }
 
 void init_mod() {
-  build_squarey(((set_3){.x = 0.5, .y = 0.0, .z = 0.5}), 0.5, triangles, 0);
+  square_y(((set_3){.x = 0.5, .y = 0.0, .z = 0.5}), 0.5, triangles, 0);
   build_cube(((set_3){.x = 0.2, .y = 0.15, .z = 0.6}), 0.1, triangles + 2);
   lights[0] = (light){(set_3){.x = 0.5, .y = 0.5, .z = 1.5}};
 }

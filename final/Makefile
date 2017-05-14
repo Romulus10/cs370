@@ -3,13 +3,20 @@ LIBS=-lGL -lglut -lGLU -lm
 INCDIR=-I../include
 LIBDIR=-L../lib -L/usr/X11R6/lib
 CC=gcc
+BLD=./tracer
 
-asgn5: ray_tracer.c
-	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o tracer
+make: ray_tracer.c
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
+obj:
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -c
+asm:
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -S
 clean:
-	rm tracer
+	rm -f $(BLD)
+	rm -f ray_tracer.o
+	rm -f ray_tracer.s
 run:
-	./tracer
+	$(BLD)
 cleanup:
 	clang-format ray_tracer.c > tmp.txt
 	cat tmp.txt > ray_tracer.c
@@ -17,5 +24,11 @@ cleanup:
 all:
 	make cleanup
 	make clean
-	make asgn5
+	make
 	make run
+check:
+	valgrind $(BLD) # Hangs after a bit and never draws the scene.
+no-link:
+	make clean
+	make asm
+	make obj
