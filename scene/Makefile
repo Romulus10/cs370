@@ -7,14 +7,8 @@ BLD=./tracer
 
 make: ray_tracer.c
 	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
-obj:
-	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -c
-asm:
-	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -S
 clean:
 	rm -f $(BLD)
-	rm -f ray_tracer.o
-	rm -f ray_tracer.s
 run:
 	$(BLD)
 cleanup:
