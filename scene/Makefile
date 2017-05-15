@@ -1,28 +1,36 @@
-FLAGS=-D_LINUX -ffast-math -funroll-loops -O3 -g -Wall -Werror
-FLAGS_NO=-D_LINUX -g -Wall -Werror
-LIBS=-lm -lGL -lglut -lGLU
+FLAGS=-D_LINUX -ffast-math -funroll-loops -O0 -g -std=gnu99 -trigraphs -Werror -Wall
+LIBS=-lGL -lglut -lGLU -lm
 INCDIR=-I../include
 LIBDIR=-L../lib -L/usr/X11R6/lib
-OBJDIR=build/obj/
 CC=gcc
+BLD=./tracer
 
-SRC=src/ray_tracer.c src/ops.c src/tracer.c src/objects.c
-BLD=build/ray_tracer
-
-make:
-	mkdir build
-	$(CC) $(SRC) $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
-
-no_opt:
-	mkdir build
-	$(CC) $(SRC) $(FLAGS_NO) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
-
+make: ray_tracer.c
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -o $(BLD)
+obj:
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -c
+asm:
+	$(CC) ray_tracer.c $(FLAGS) $(INCDIR) $(LIBDIR) $(LIBS) -S
 clean:
-	rm -rf build
-
+	rm -f $(BLD)
+	rm -f ray_tracer.o
+	rm -f ray_tracer.s
 run:
 	$(BLD)
-
-val:
-	valgrind --track-origins=yes --leak-check=full -v $(BLD)
+cleanup:
+	clang-format ray_tracer.c > tmp.txt
+	cat tmp.txt > ray_tracer.c
+	rm tmp.txt
+all:
+	make cleanup
+	make check
+	make clean
+	make
+	make run
+check:
+	cppcheck --enable=all --inconclusive --std=posix --check-config --suppress=missingIncludeSystem ray_tracer.c
+no-link:
+	make clean
+	make asm
+	make obj
 
