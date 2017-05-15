@@ -16,10 +16,10 @@
 #define VECTOR_DIST_SPHERE(R, P1, P2, U)                                       \
   ({                                                                           \
     set_3 sr1;                                                                 \
-    PT_SUB(sr1, P2, P1);                                              \
+    PT_SUB(sr1, P2, P1);                                                       \
     set_3 mr1;                                                                 \
-    SCALAR_DOT(mr1, sr1, U);                                            \
-    PT_ADD(R, P1, mr1);                                                    \
+    SCALAR_DOT(mr1, sr1, U);                                                   \
+    PT_ADD(R, P1, mr1);                                                        \
   });
 
 #define VECTOR_U_SPHERE(R, P1, P2, P3)                                         \
@@ -28,7 +28,7 @@
                        ((P3.y - P1.y) * (P2.y - P1.y)) +                       \
                        ((P3.z - P1.z) * (P2.z - P1.z));                        \
     set_3 bot_v_sub;                                                           \
-    PT_SUB(bot_v_sub, P2, P1);                                        \
+    PT_SUB(bot_v_sub, P2, P1);                                                 \
     float bot_result;                                                          \
     VECTOR_MAG(bot_result, bot_v_sub);                                         \
     bot_result = bot_result * bot_result;                                      \
@@ -41,66 +41,64 @@
 
 #define VECTOR_DS(D1, D2, D3, C1, C2, C3)                                      \
   ({                                                                           \
-    DOT_PRODUCT(D1, C1, C2);                                                    \
-    DOT_PRODUCT(D2, C2, C3);                                                    \
-    DOT_PRODUCT(D3, C3, C1);                                                    \
+    DOT_PRODUCT(D1, C1, C2);                                                   \
+    DOT_PRODUCT(D2, C2, C3);                                                   \
+    DOT_PRODUCT(D3, C3, C1);                                                   \
   })
 
 #define VECTOR_CS(C1, C2, C3, V1, V2, V3)                                      \
   ({                                                                           \
-    CROSS_PRODUCT(C1, V1, V2);                                                  \
-    CROSS_PRODUCT(C2, V2, V3);                                                  \
-    CROSS_PRODUCT(C3, V3, V1);                                                  \
+    CROSS_PRODUCT(C1, V1, V2);                                                 \
+    CROSS_PRODUCT(C2, V2, V3);                                                 \
+    CROSS_PRODUCT(C3, V3, V1);                                                 \
   })
 
 #define VECTOR_VS(V1, V2, V3, T1, T2, T3, I)                                   \
   ({                                                                           \
-    PT_SUB(V1, T1, I);                                                \
-    PT_SUB(V2, T2, I);                                                \
-    PT_SUB(V3, T3, I);                                                \
+    PT_SUB(V1, T1, I);                                                         \
+    PT_SUB(V2, T2, I);                                                         \
+    PT_SUB(V3, T3, I);                                                         \
   })
 
 #define VECTOR_INTERSECT(R, P1, P2, U)                                         \
   ({                                                                           \
     set_3 arg1, arg2;                                                          \
-    PT_SUB(arg1, P2, P1);                                             \
-    SCALAR_DOT(arg2, arg1, U);                                          \
-    PT_ADD(R, P1, arg2);                                                   \
+    PT_SUB(arg1, P2, P1);                                                      \
+    SCALAR_DOT(arg2, arg1, U);                                                 \
+    PT_ADD(R, P1, arg2);                                                       \
   })
 
 #define VECTOR_U(P, N, T, P1, P2)                                              \
   ({                                                                           \
     float arg1, arg2;                                                          \
     set_3 TminusP1, P2minusP1;                                                 \
-    PT_SUB(TminusP1, T, P1);                                          \
-    PT_SUB(P2minusP1, P2, P1);                                        \
-    DOT_PRODUCT(arg1, N, TminusP1);                                             \
-    DOT_PRODUCT(arg2, N, P2minusP1);                                            \
+    PT_SUB(TminusP1, T, P1);                                                   \
+    PT_SUB(P2minusP1, P2, P1);                                                 \
+    DOT_PRODUCT(arg1, N, TminusP1);                                            \
+    DOT_PRODUCT(arg2, N, P2minusP1);                                           \
     P = arg1 / arg2;                                                           \
   })
 
-#define GET_NORMAL(R, T1, T2, T3)                                           \
+#define GET_NORMAL(R, T1, T2, T3)                                              \
   ({                                                                           \
     set_3 arg1, arg2;                                                          \
-    PT_SUB(arg1, T2, T1);                                             \
-    PT_SUB(arg2, T3, T1);                                             \
-    CROSS_PRODUCT(R, arg1, arg2);                                               \
+    PT_SUB(arg1, T2, T1);                                                      \
+    PT_SUB(arg2, T3, T1);                                                      \
+    CROSS_PRODUCT(R, arg1, arg2);                                              \
   })
 
-#define CROSS_PRODUCT(R, V1, V2)                                                \
+#define CROSS_PRODUCT(R, V1, V2)                                               \
   (R = (set_3){(V1.y * V2.z) - (V1.z * V2.y), (V1.z * V2.x) - (V1.x * V2.z),   \
                (V1.x * V2.y) - (V1.y * V2.x)})
 
-#define DOT_PRODUCT(P, V1, V2)                                                  \
+#define DOT_PRODUCT(P, V1, V2)                                                 \
   (P = (V1.x * V2.x) + (V1.y * V2.y) + (V1.z * V2.z))
 
 #define SCALAR_DOT(R, V1, s) (R = (set_3){V1.x * s, V1.y * s, V1.z * s})
 
-#define PT_ADD(R, V1, V2)                                                  \
-  (R = (set_3){V1.x + V2.x, V1.y + V2.y, V1.z + V2.z})
+#define PT_ADD(R, V1, V2) (R = (set_3){V1.x + V2.x, V1.y + V2.y, V1.z + V2.z})
 
-#define PT_SUB(R, V1, V2)                                             \
-  (R = (set_3){V1.x - V2.x, V1.y - V2.y, V1.z - V2.z})
+#define PT_SUB(R, V1, V2) (R = (set_3){V1.x - V2.x, V1.y - V2.y, V1.z - V2.z})
 
 #define CHECK_D(D1, D2, D3) ((d1 > 0) && (d2 > 0) && (d3 > 0))
 
@@ -168,12 +166,11 @@ void square_z(set_3 center, float offset, triangle *ptr, int dir) {
   }
   triangle_z(((set_2){.a = center.x - offset, .b = center.y + offset}),
              ((set_2){.a = center.x + offset, .b = center.y + offset}),
-             ((set_2){.a = center.x - offset, .b = center.y - offset}),
-             c, ptr);
+             ((set_2){.a = center.x - offset, .b = center.y - offset}), c, ptr);
   triangle_z(((set_2){.a = center.x + offset, .b = center.y + offset}),
              ((set_2){.a = center.x + offset, .b = center.y - offset}),
-             ((set_2){.a = center.x - offset, .b = center.y - offset}),
-             c, ptr + 1);
+             ((set_2){.a = center.x - offset, .b = center.y - offset}), c,
+             ptr + 1);
 }
 
 void square_y(set_3 center, float offset, triangle *ptr, int dir) {
@@ -187,12 +184,11 @@ void square_y(set_3 center, float offset, triangle *ptr, int dir) {
   }
   triangle_y(((set_2){.a = center.x - offset, .b = center.z + offset}),
              ((set_2){.a = center.x + offset, .b = center.z + offset}),
-             ((set_2){.a = center.x - offset, .b = center.z - offset}),
-             c, ptr);
+             ((set_2){.a = center.x - offset, .b = center.z - offset}), c, ptr);
   triangle_y(((set_2){.a = center.x + offset, .b = center.z + offset}),
              ((set_2){.a = center.x + offset, .b = center.z - offset}),
-             ((set_2){.a = center.x - offset, .b = center.z - offset}),
-             c, ptr + 1);
+             ((set_2){.a = center.x - offset, .b = center.z - offset}), c,
+             ptr + 1);
 }
 
 void square_x(set_3 center, float offset, triangle *ptr, int dir) {
@@ -206,12 +202,11 @@ void square_x(set_3 center, float offset, triangle *ptr, int dir) {
   }
   triangle_x(((set_2){.a = center.y - offset, .b = center.z + offset}),
              ((set_2){.a = center.y + offset, .b = center.z + offset}),
-             ((set_2){.a = center.y - offset, .b = center.z - offset}),
-             c, ptr);
+             ((set_2){.a = center.y - offset, .b = center.z - offset}), c, ptr);
   triangle_x(((set_2){.a = center.y + offset, .b = center.z + offset}),
              ((set_2){.a = center.y + offset, .b = center.z - offset}),
-             ((set_2){.a = center.y - offset, .b = center.z - offset}),
-             c, ptr + 1);
+             ((set_2){.a = center.y - offset, .b = center.z - offset}), c,
+             ptr + 1);
 }
 
 void build_cube(set_3 center, float offset, triangle *ptr) {
@@ -348,8 +343,8 @@ void display(void) {
 }
 
 int main(int argc, char **argv) {
-  triangles = (triangle*)malloc(sizeof(triangle) * TRI_NUM);
-  lights = (light*)malloc(sizeof(light) * LIGHT_NUM);
+  triangles = (triangle *)malloc(sizeof(triangle) * TRI_NUM);
+  lights = (light *)malloc(sizeof(light) * LIGHT_NUM);
   glutInit(&argc, argv);
   glutCreateWindow("ray tracer");
   init_mod();
