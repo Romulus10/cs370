@@ -219,7 +219,9 @@ void build_cube(set_3 center, float offset, triangle *ptr) {
 }
 
 inter intersect(set_3 screen, set_3 eye, int i) {
-  inter result = {0.0, {0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}, false, 0};
+  inter result;
+  set_3 v1, v2, v3, c1, c2, c3;
+  float d1, d2, d3;
 
   set_3 t1 = triangles[i].t1, t2 = triangles[i].t2, t3 = triangles[i].t3;
 
@@ -228,10 +230,6 @@ inter intersect(set_3 screen, set_3 eye, int i) {
   VECTOR_U(result.u, result.normal, t1, eye, screen);
 
   VECTOR_INTERSECT(result.I, eye, screen, result.u);
-
-  set_3 v1, v2, v3, c1, c2, c3;
-
-  float d1, d2, d3;
 
   VECTOR_VS(v1, v2, v3, t1, t2, t3, result.I);
   VECTOR_CS(c1, c2, c3, v1, v2, v3);
