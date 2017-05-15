@@ -18,7 +18,7 @@ clean:
 run:
 	$(BLD)
 cleanup:
-	clang-format-3.8 ray_tracer.c > tmp.txt
+	clang-format ray_tracer.c > tmp.txt
 	cat tmp.txt > ray_tracer.c
 	rm tmp.txt
 all:

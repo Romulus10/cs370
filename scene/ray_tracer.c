@@ -12,9 +12,9 @@
 #define LIGHT -1.0
 #define TRIANGLE 1.0
 
-#define INC 0.002
-#define SZ 0.004
 #define RES 500
+#define INC .002
+#define SZ .004
 
 #define TRI_NUM 14
 #define LIGHT_NUM 1
