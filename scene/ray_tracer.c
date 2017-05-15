@@ -1,3 +1,9 @@
+/*
+ * Sean Batzel
+ *
+ * Ray Tracer - Working/Improved/Optimized Version
+ */
+
 #include <GL/glut.h>
 #include <math.h>
 #include <stdbool.h>
