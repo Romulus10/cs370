@@ -21,50 +21,29 @@
 
 #define VECTOR_DIST_SPHERE(R, P1, P2, U)                                       \
   ({                                                                           \
-    set_3 sr1;                                                                 \
-    PT_SUB(sr1, P2, P1);                                                       \
-    set_3 mr1;                                                                 \
-    SCALAR_DOT(mr1, sr1, U);                                                   \
-    PT_ADD(R, P1, mr1);                                                        \
+    set_3 a;                                                                   \
+    PT_SUB(a, P2, P1);                                                         \
+    set_3 b;                                                                   \
+    SCALAR_DOT(b, a, U);                                                       \
+    PT_ADD(R, P1, b);                                                          \
   });
 
 #define VECTOR_U_SPHERE(R, P1, P2, P3)                                         \
   ({                                                                           \
-    float top_result = ((P3.x - P1.x) * (P2.x - P1.x)) +                       \
-                       ((P3.y - P1.y) * (P2.y - P1.y)) +                       \
-                       ((P3.z - P1.z) * (P2.z - P1.z));                        \
-    set_3 bot_v_sub;                                                           \
-    PT_SUB(bot_v_sub, P2, P1);                                                 \
-    float bot_result;                                                          \
-    VECTOR_MAG(bot_result, bot_v_sub);                                         \
-    bot_result = bot_result * bot_result;                                      \
+    float a = ((P3.x - P1.x) * (P2.x - P1.x)) +                                \
+              ((P3.y - P1.y) * (P2.y - P1.y)) +                                \
+              ((P3.z - P1.z) * (P2.z - P1.z));                                 \
+    set_3 sub;                                                                 \
+    PT_SUB(sub, P2, P1);                                                       \
+    float b;                                                                   \
+    MAG(b, sub);                                                               \
+    b = pow(b, 2);                                                             \
                                                                                \
-    R = top_result / bot_result;                                               \
+    R = a / b;                                                                 \
   })
 
-#define VECTOR_MAG(R, VEC)                                                     \
+#define MAG(R, VEC)                                                            \
   ({ R = sqrt(VEC.x * VEC.x + VEC.y * VEC.y + VEC.z * VEC.z); })
-
-#define VECTOR_DS(D1, D2, D3, C1, C2, C3)                                      \
-  ({                                                                           \
-    DOT_PRODUCT(D1, C1, C2);                                                   \
-    DOT_PRODUCT(D2, C2, C3);                                                   \
-    DOT_PRODUCT(D3, C3, C1);                                                   \
-  })
-
-#define VECTOR_CS(C1, C2, C3, V1, V2, V3)                                      \
-  ({                                                                           \
-    CROSS_PRODUCT(C1, V1, V2);                                                 \
-    CROSS_PRODUCT(C2, V2, V3);                                                 \
-    CROSS_PRODUCT(C3, V3, V1);                                                 \
-  })
-
-#define VECTOR_VS(V1, V2, V3, T1, T2, T3, I)                                   \
-  ({                                                                           \
-    PT_SUB(V1, T1, I);                                                         \
-    PT_SUB(V2, T2, I);                                                         \
-    PT_SUB(V3, T3, I);                                                         \
-  })
 
 #define VECTOR_INTERSECT(R, P1, P2, U)                                         \
   ({                                                                           \
@@ -87,10 +66,10 @@
 
 #define GET_NORMAL(R, T1, T2, T3)                                              \
   ({                                                                           \
-    set_3 arg1, arg2;                                                          \
-    PT_SUB(arg1, T2, T1);                                                      \
-    PT_SUB(arg2, T3, T1);                                                      \
-    CROSS_PRODUCT(R, arg1, arg2);                                              \
+    set_3 a, b;                                                                \
+    PT_SUB(a, T2, T1);                                                         \
+    PT_SUB(b, T3, T1);                                                         \
+    CROSS_PRODUCT(R, a, b);                                                    \
   })
 
 #define CROSS_PRODUCT(R, V1, V2)                                               \
@@ -237,9 +216,15 @@ inter intersect(set_3 screen, set_3 eye, int i) {
 
   VECTOR_INTERSECT(result.I, eye, screen, result.u);
 
-  VECTOR_VS(v1, v2, v3, t1, t2, t3, result.I);
-  VECTOR_CS(c1, c2, c3, v1, v2, v3);
-  VECTOR_DS(d1, d2, d3, c1, c2, c3);
+  PT_SUB(v1, t1, result.I);
+  PT_SUB(v2, t2, result.I);
+  PT_SUB(v3, t3, result.I);
+  CROSS_PRODUCT(c1, v1, v2);
+  CROSS_PRODUCT(c2, v2, v3);
+  CROSS_PRODUCT(c3, v3, v1);
+  DOT_PRODUCT(d1, c1, c2);
+  DOT_PRODUCT(d2, c2, c3);
+  DOT_PRODUCT(d3, c3, c1);
 
   if (CHECK_D(d1, d2, d3)) {
     result.lit = true;
@@ -250,7 +235,7 @@ inter intersect(set_3 screen, set_3 eye, int i) {
 }
 
 inter intersect_light(set_3 screen, set_3 eye, set_3 center, float radius) {
-  inter result = (inter){.u = 0.0, .lit = false};
+  inter result;
   float u;
   VECTOR_U_SPHERE(u, eye, screen, center);
   set_3 p;
@@ -258,14 +243,14 @@ inter intersect_light(set_3 screen, set_3 eye, set_3 center, float radius) {
   set_3 sub;
   PT_SUB(sub, p, center);
   float sub_mag;
-  VECTOR_MAG(sub_mag, sub);
+  MAG(sub_mag, sub);
   result.u = u;
   result.lit = sub_mag <= radius;
   return result;
 }
 
 float ray(set_3 screen, set_3 eye) {
-  float bright = 0.0;
+  float bright = 0;
   inter result, closest;
   closest.u = INFINITY;
 
@@ -286,10 +271,10 @@ float ray(set_3 screen, set_3 eye) {
   }
 
   if (closest.type == LIGHT) {
-    bright = 1.0;
+    bright = 1;
   }
   if (closest.type == TRIANGLE) {
-    bright = 0.1;
+    bright = .1;
 
     for (int i = 0; i < LIGHT_NUM; i++) {
       set_3 oldray;
@@ -305,7 +290,7 @@ float ray(set_3 screen, set_3 eye) {
         set_3 sub_diff;
         PT_SUB(sub_diff, closest.I, lights[i].center);
         float mag;
-        VECTOR_MAG(mag, sub_diff);
+        MAG(mag, sub_diff);
         bright += (ray(lights[i].center, closest.I)) / (mag);
       }
     }
@@ -314,9 +299,9 @@ float ray(set_3 screen, set_3 eye) {
 }
 
 void init_mod() {
-  square_y(((set_3){.x = 0.5, .y = 0.0, .z = 0.5}), 0.5, triangles, 0);
-  build_cube(((set_3){.x = 0.2, .y = 0.15, .z = 0.6}), 0.1, triangles + 2);
-  lights[0] = (light){(set_3){.x = 0.5, .y = 0.5, .z = 1.5}};
+  square_y(((set_3){.x = .5, .y = .0, .z = .5}), .5, triangles, 0);
+  build_cube(((set_3){.x = .2, .y = .15, .z = .6}), .1, triangles + 2);
+  lights[0] = (light){(set_3){.x = .5, .y = .5, .z = 1.5}};
 }
 
 void draw_pixel(float x, float y, float r, float g, float b) {
