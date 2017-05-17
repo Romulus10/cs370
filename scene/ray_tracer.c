@@ -19,6 +19,8 @@
 #define TRI_NUM 14
 #define LIGHT_NUM 1
 
+#define is ==
+
 #define VECTOR_DIST_SPHERE(R, P1, P2, U)                                       \
   ({                                                                           \
     set_3 a;                                                                   \
@@ -142,7 +144,7 @@ void triangle_z(set_2 v1, set_2 v2, set_2 v3, float plane, triangle *ptr) {
 
 void square_z(set_3 center, float offset, triangle *ptr, int dir) {
   float c;
-  if (dir == 0) {
+  if (dir is 0) {
     c = center.z;
   } else if (dir < 0) {
     c = center.z - offset;
@@ -160,7 +162,7 @@ void square_z(set_3 center, float offset, triangle *ptr, int dir) {
 
 void square_y(set_3 center, float offset, triangle *ptr, int dir) {
   float c;
-  if (dir == 0) {
+  if (dir is 0) {
     c = center.y;
   } else if (dir < 0) {
     c = center.y - offset;
@@ -178,7 +180,7 @@ void square_y(set_3 center, float offset, triangle *ptr, int dir) {
 
 void square_x(set_3 center, float offset, triangle *ptr, int dir) {
   float c;
-  if (dir == 0) {
+  if (dir is 0) {
     c = center.x;
   } else if (dir < 0) {
     c = center.x - offset;
@@ -270,10 +272,10 @@ float ray(set_3 screen, set_3 eye) {
     }
   }
 
-  if (closest.type == LIGHT) {
+  if (closest.type is LIGHT) {
     bright = 1;
   }
-  if (closest.type == TRIANGLE) {
+  if (closest.type is TRIANGLE) {
     bright = .1;
 
     for (int i = 0; i < LIGHT_NUM; i++) {
@@ -319,10 +321,10 @@ void draw_pixel(float x, float y, float r, float g, float b) {
 
 void display(void) {
   glClear(GL_COLOR_BUFFER_BIT);
-  set_3 eye = {0.5, 0.5, -1.0};
+  set_3 eye = {.5, .5, -1};
 
-  for (float i = 0; i < 1.0; i += INC) {
-    for (float j = 0; j < 1.0; j += INC) {
+  for (float i = 0; i < 1; i += INC) {
+    for (float j = 0; j < 1; j += INC) {
       set_3 screen = {i, j, 0};
       float b = ray(screen, eye);
       draw_pixel(i * RES, j * RES, b, b, b);
